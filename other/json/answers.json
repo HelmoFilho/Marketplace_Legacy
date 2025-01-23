@@ -1,0 +1,21 @@
+{
+    "01": {"tipo": "1", "descricao": "Sucesso (mensagem customizada para a situação)"},
+    "02": {"tipo": "2", "descricao": "Campos XXXXX inválidos."},
+    "03": {"tipo": "3", "descricao": "Campos XXXXX faltando."},
+    "04": {"tipo": "4", "descricao": "Campos XXXXX com valores de tipos incorretos."},
+    "05": {"tipo": "5", "descricao": "Registro já existe. | registro não existe."},
+    "06": {"tipo": "6", "descricao": "Dados não encontrados para estes filtros."},
+    "07": {"tipo": "7", "descricao": "Sem dados para retornar."},
+    "08": {"tipo": "8", "descricao": "Senha fora do padrão (8-16 caracteres)."},
+    "09": {"tipo": "9", "descricao": "Usuário ou senha inválido"},
+    "10": {"tipo": "10", "descricao": "Campos XXXXX com valores inexistentes."},
+    "11": {"tipo": "11", "descricao": "Token inválido por: XXXXX"},
+    "12": {"tipo": "12", "descricao": "Usuario sem permissão para realizar ação."},
+    "13": {"tipo": "13", "descricao": "Ação recusada."},
+    "14": {"tipo": "14", "descricao": "Campos XXXXX com valores nulos."},
+    "15": {"tipo": "15", "descricao": "Houve erro com toda a transação."},
+    "16": {"tipo": "16", "descricao": "Não houveram modificações na transação."},
+    "17": {"tipo": "17", "descricao": "Deletado."},
+    "18": {"tipo": "18", "descricao": "Erro genérico (mensagem customizada para a situação)."},
+    "19": {"tipo": "19", "descricao": "Usuario com cadastro social permitido."}
+}

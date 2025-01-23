@@ -1,0 +1,3377 @@
+openapi: 3.0.0
+
+info:
+  title: "API do projeto B2B"
+  description: "Documentação da API do projeto B2B 2.0."
+  version: 0.2.0
+
+servers:
+  - url: 'https://wsmarketplace-dev.guarany.com.br/api/v1'
+    description: Development server
+
+  - url: 'https://mktplace-hub.guarany.com.br/api/v1'
+    description: Production server
+
+tags:
+  - name: "Listar tipo/grupo/subgrupo para o marketplace"
+    description: "Listagem de tipo/grupo/subgrupo dependentes do distibuidor"
+
+  - name: "Listar produtos destaques do grupo"
+    description: "Listagem dos produtos destaques"
+
+  - name: "Listar produtos do marketplace"
+    description: "Listagem de produtos dos distribuidores para o marketplace"
+
+  - name: "Listar descrição do produto do marketplace"
+    description: "Lista os ids de produto e as descrições para serem utilizadas pelo bot."
+
+  - name: "Listar marcas para o marketplace"
+    description: "Listagem de marcas dependentes do distibuidor"
+
+  - name: "Listar produtos com desconto do marketplace"
+    description: "Listagem de todos os produtos com oferta de desconto que estão ativas no momento"
+
+  - name: "Listar ofertas do marketplace"
+    description: "Lista ofertas válidas do tipo compre e ganhe(bonificada) e escalonada"
+
+  - name: "Listar cupons do marketplace"
+    description: "Listagem dos cupons dos distribuidores para o marketplace"
+
+  - name: "Validar cupons do marketplace"
+    description: "Validação de um cupom"
+
+paths:
+  
+  /marketplace/produtos/ofertas/descontos:
+  
+    post:
+      tags:
+        - "Listar produtos com desconto do marketplace"
+      summary: POST - Listagem dos descontos
+
+      description: >
+                        - Para este endpoint existem os filtros de busca:
+                          - Por marca
+                          - Por valor de multiplo de venda
+                          - Por existência de estoque
+                          - Por existência de oferta campanha ou escalonado
+                          - Por grupos
+                          - Por subgrupos
+
+                        - Existem tambêm as ordenações por:
+                          - Maior preço
+                          - Menor preço
+                          - Recomendados
+                          - A à Z
+                          - Z à A 
+
+                        * Tabelas Consultadas: OFERTA, OFERTA_PRODUTO, PRODUTO e PRODUTO_DISTRIBUIDOR
+                    
+
+      security:
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-listar-desconto-marketplace'
+            examples:
+              Listagem Comum:  # <--- Nome do Exemplo dado
+                summary: Listagem correta
+                value:
+                  # vv Payload do exemplo vv
+                  id_distribuidor: 0
+                  id_cliente: 1
+                  ordenar: 4
+                  estoque: false
+                  multiplo_venda: 1
+                  tipo_oferta: 0
+                  marca: [10622]
+                  grupos: []
+                  subgrupos: []
+                  pagina: 1
+                  limite: 20
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok-dados'
+
+              examples:
+                
+                Resposta_Tudo-ok-dados:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Dados enviados."
+                      informacoes: 
+                        itens: 0
+                        paginas: 0
+                        pagina_atual: 0
+                      dados: [
+                        {
+                            "sku": "7899706170833",
+                            "descricao_produto": "SHAMPOO ELSEVE LONGO DOS SONHOS 200ML",
+                            "status": "A",
+                            "id_marca": 10502,
+                            "descricao_marca": "ELSEVE",
+                            "dun14": "07899706170840",
+                            "tipo_produto": "ELSEVE SH 200ML",
+                            "variante": "LONGO DOS",
+                            "volumetria": "200ML",
+                            "unidade_embalagem": "CX",
+                            "quantidade_embalagem": 12,
+                            "unidade_venda": "UN",
+                            "quant_unid_venda": 1,
+                            "imagem": [
+                                "https://midiasmarketplace-dev.guarany.com.br/imagens/produto/150/7899706170833/shampoo-elseve-longo-dos-sonhos-200ml/1.png",
+                                "https://midiasmarketplace-dev.guarany.com.br/imagens/produto/150/7899706170833/shampoo-elseve-longo-dos-sonhos-200ml/2.png"
+                            ],
+                            "distribuidores": [
+                                {
+                                    "id_produto": "4289-8",
+                                    "id_distribuidor": 1,
+                                    "descricao_distribuidor": "DAG DISTRIBUIDOR",
+                                    "agrupamento_variante": "88205",
+                                    "cod_prod_distr": "8820523",
+                                    "cod_frag_distr": "23",
+                                    "id_fornecedor": "1-00001303",
+                                    "desc_fornecedor": "LOREAL BRASIL COMERC. DE COSMETICOS LTDA",
+                                    "multiplo_venda": 3,
+                                    "ranking": 1,
+                                    "unidade_venda": "UN",
+                                    "quant_unid_venda": 1,
+                                    "giro": "A",
+                                    "agrup_familia": "01011",
+                                    "id_tipo": [
+                                        2
+                                    ],
+                                    "id_grupo": [
+                                        101
+                                    ],
+                                    "id_subgrupo": [
+                                        10101
+                                    ],
+                                    "categorizacao": [
+                                        {
+                                            "id_tipo": 2,
+                                            "descricao_tipo": "CATEGORIAS",
+                                            "grupo": [
+                                                {
+                                                    "id_grupo": 101,
+                                                    "descricao_grupo": "CABELOS",
+                                                    "subgrupo": [
+                                                        {
+                                                            "id_subgrupo": 10101,
+                                                            "descricao_subgrupo": "CABELO - TOP"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "status": "A",
+                                    "data_cadastro": "2022-08-17",
+                                    "detalhes": null,
+                                    "ofertas": {
+                                        "escalonada": {
+                                            "produto_escalonado": [
+                                                573
+                                            ]
+                                        },
+                                        "bonificada": {
+                                            "produto_ativador": [
+                                                574
+                                            ]
+                                        }
+                                    },
+                                    "avise_me": false,
+                                    "favorito": false,
+                                    "estoque": 15629,
+                                    "preco_tabela": 9.57,
+                                    "desconto": {
+                                        "preco_desconto": 8.613,
+                                        "desconto": 10.0,
+                                        "data_inicio": "2023-01-10 03:00:00.000000",
+                                        "data_final": "2023-04-04 03:00:00.000000"
+                                    }
+                                }
+                            ]
+                        }
+                      ]
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+                
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '403':
+          description: "Usuário sem autorização para acessar recurso"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Acao-especifica-negada'
+
+              examples:
+                
+                Resposta_Acao-especifica-negada:
+                  summary: "Resposta: Ação especifica negada"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado, tenha permissão suficiente mas não para realizar ação desejada."
+                    Saida-Real:
+                      status: 403
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Usuario tentando realizar ação por cliente não atrelado ao mesmo."
+
+        '404':
+          description: "Dados não-existentes"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-não-existentes'
+              
+              examples:
+                
+                Resposta_Dados-não-existentes:
+                  summary: "Resposta: Dados não-existentes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra mas não existam dado para serem encontrados"
+                    Saida-Real:
+                      status: 404
+                      resposta: 
+                        tipo: 7
+                        descricao: "Sem dados para retornar."          
+
+  /marketplace/produtos/descricao:
+  
+    get:
+      tags:
+        - "Listar descrição do produto do marketplace"
+      summary: GET - Listagem de informações do produto
+
+      description: "
+                        * Tabelas Consultadas: PRODUTO
+                    "
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+                  
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Token de sessão enviado."
+                      dados: [
+                        {
+                            "id_produto": "1000-1",
+                            "descricao_completa": "CREME ESFOLIANTE CORPO DOURADO 300G GELEIA DE MARACUJA",
+                            "sku": "7898610075401",
+                            "dun14": "17898610075408"
+                        }
+                      ]
+                                        
+        '404':
+          description: "Dados não-existentes"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-não-existentes'
+              
+              examples:
+                
+                Resposta_Dados-não-existentes:
+                  summary: "Resposta: Dados não-existentes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra mas não existam dado para serem encontrados"
+                    Saida-Real:
+                      status: 404
+                      resposta: 
+                        tipo: 7
+                        descricao: "Sem dados para retornar."  
+  
+  /marketplace/produtos/marcas:
+  
+    post:
+      tags:
+        - "Listar marcas para o marketplace"
+      summary: POST - Listagem de marcas
+
+      description: >
+                      - Para este endpoint existem os filtros de busca:
+                          - Por tipo/grupo/subgrupo
+                          - Por existência de oferta campanha ou escalonado
+                          - Por id_oferta
+
+                        - Vale ressaltar que os seguintes filtros não funcionam com o usuario não-logado:
+                            - Busca por existência de oferta desconto, campanha ou escalonado   
+
+                        * Tabelas Consultadas: PRODUTO, PRODUTO_DISTRIBUIDOR, PRODUTO_SUBGRUPO, SUBGRUPO, GRUPO_SUBGRUPO, GRUPO, TIPO, OFERTA, OFERTA_PRODUTO, OFERTA_CLIENTE, OFERTA_DESCONTO, OFERTA_BONIFICADO, OFERTA_ESCALONADO_FAIXA, MARCA, DISTRIBUIDOR, CLIENTE, e CLIENTE_DISTRIBUIDOR
+
+      security:
+        - {}
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-listar-marcas-marketplace'
+            examples:
+              Listagem Comum:  # <--- Nome do Exemplo dado
+                summary: Listagem correta
+                value:
+                  # vv Payload do exemplo vv
+                  id_distribuidor: 0
+                  id_cliente: 1
+                  id_tipo: 1
+                  id_grupo: 2
+                  id_subgrupo: 3
+                  tipo_oferta: 0
+                  grupos: []
+                  subgrupos: []
+                  id_produto: []
+                  id_marca: []
+                  desconto: false
+                  estoque: false
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Token de sessão enviado."
+                      dados: [
+                        {
+                            "id_distribuidor": 1,
+                            "id_marca": 10128,
+                            "desc_marca": "ALTA MODA"
+                        }
+                      ]
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '404':
+          description: "Dados não-existentes"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-não-existentes'
+              
+              examples:
+                
+                Resposta_Dados-não-existentes:
+                  summary: "Resposta: Dados não-existentes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra mas não existam dado para serem encontrados"
+                    Saida-Real:
+                      status: 404
+                      resposta: 
+                        tipo: 7
+                        descricao: "Sem dados para retornar."
+
+  /marketplace/produtos/ofertas:
+  
+    post:
+      tags:
+        - "Listar ofertas do marketplace"
+      summary: POST - Listagem das ofertas válidas
+
+      description: >
+                        - Para este endpoint existem os filtros de busca:
+                          - Por campo de busca (descricao, sku, dun14, id_produto e desc_marca)
+                          - Por id_produto
+                          - Por sku
+                          - Por marca
+                          - Por existência de desconto
+                          - Por valor de multiplo de venda
+                          - Por existência de estoque
+                          - Por existência de oferta campanha ou escalonado
+                          - Por grupos
+                          - Por subgrupos
+
+                        - Existem tambêm as ordenações por:
+                          - Recomendados
+                          - Mais recentes
+                          - Mais antigas
+
+                        - Vale ressaltar que os seguintes filtros não funcionam com o usuario não-logado:
+                            - Busca por existência de estoque
+                            - busca por existência de desconto
+
+      security:
+        - {}
+        - ApiKeyAuth: [] 
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-listar-ofertas-marketplace'
+            examples:
+              Listagem Comum:  # <--- Nome do Exemplo dado
+                summary: Listagem correta
+                value:
+                  # vv Payload do exemplo vv
+                  id_distribuidor: 0
+                  id_cliente: 1
+                  id_oferta:
+                    - 451
+                    - 454
+                  id_tipo: 2
+                  id_grupo: 107
+                  id_subgrupo: 10703
+                  id_orcamento: 1
+                  busca: "Alyne"
+                  paginar: true
+                  ordenar: 4
+                  estoque: false
+                  multiplo_venda: 1
+                  desconto: false
+                  tipo_oferta: 0
+                  marca: [10622]
+                  grupos: []
+                  subgrupos: []
+                  pagina: 1
+                  limite: 20
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok-paginado'
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok-dados'
+
+              examples:
+
+                Resposta_Tudo-ok-paginado:
+                  summary: "Resposta: tudo ok paginado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema e os dados forem paginados."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Dados enviados."
+                      informacoes: 
+                        itens: 0
+                        paginas: 0
+                        pagina_atual: 0
+                      dados: [
+                          {
+                            "id_campanha": 451,
+                            "id_distribuidor": 1,
+                            "status": "A",
+                            "tipo_campanha": "W",
+                            "descricao": "31210 LV11 PG10 AG OX ALYNE CR 100ML C/24 OU AMONIACO ALYNE",
+                            "data_inicio": "2022-02-22 00:00:00.000000",
+                            "data_final": "2023-01-15 10:14:49.017000",
+                            "destaque": 1,
+                            "quantidade_limite": 1000,
+                            "quantidade_pontos": 1000,
+                            "quantidade_produto": 5,
+                            "quantidade_ativar": 10.0,
+                            "maxima_ativacao": 1000,
+                            "quantidade_bonificado": 0,
+                            "valor_ativar": 0.0,
+                            "automatica": false,
+                            "unidade_venda": "CX",
+                            "unificada": 1,
+                            "produto_ativador": [
+                                {
+                                    "id_campanha": 451,
+                                    "id_distribuidor": 1,
+                                    "id_produto": "3559-1",
+                                    "sku": "7897161371024",
+                                    "id_marca": 10102,
+                                    "descricao_marca": "ALYNE",
+                                    "descricao_produto": "AGUA OXIGENADA ALYNE CREME 40 VOLUMES 100ML COM 24 UNIDADES",
+                                    "imagem": [
+                                        "http://192.168.203.24:5977/imagens/produto/150/7897161371024/agua-oxigenada-alyne-creme-40-volumes-100ml-com-24-unidades/1.png",
+                                        "http://192.168.203.24:5977/imagens/produto/150/7897161371024/agua-oxigenada-alyne-creme-40-volumes-100ml-com-24-unidades/2.png"
+                                    ],
+                                    "id_tipo": [
+                                        2
+                                    ],
+                                    "id_grupo": [
+                                        103
+                                    ],
+                                    "id_subgrupo": [
+                                        10325
+                                    ],
+                                    "categorizacao": [
+                                        {
+                                            "id_tipo": 2,
+                                            "descricao_tipo": "CATEGORIAS",
+                                            "grupo": [
+                                                {
+                                                    "id_grupo": 103,
+                                                    "descricao_grupo": "CORPO E ROSTO",
+                                                    "subgrupo": [
+                                                        {
+                                                            "id_subgrupo": 10325,
+                                                            "descricao_subgrupo": "AG OXIG/AMONIACO/EMULSAO"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "status": "A",
+                                    "quantidade": 0,
+                                    "quantidade_minima": 10.0,
+                                    "valor_minimo": 0.0,
+                                    "quantidade_min_ativacao": 0,
+                                    "valor_min_ativacao": 0.0,
+                                    "unidade_embalagem": "CX",
+                                    "quantidade_embalagem": 1,
+                                    "unidade_venda": "CX",
+                                    "quant_unid_venda": 24,
+                                    "multiplo_venda": 1,
+                                    "preco_tabela": 38.73,
+                                    "estoque": 883,
+                                    "desconto": {}
+                                }
+                            ],
+                            "produto_bonificado": [
+                                {
+                                    "id_campanha": 451,
+                                    "id_distribuidor": 1,
+                                    "id_produto": "3332-1",
+                                    "sku": "7897161371017",
+                                    "id_marca": 10102,
+                                    "descricao_marca": "ALYNE",
+                                    "descricao_produto": "AGUA OXIGENADA ALYNE CREME 30 VOLUMES 100ML COM 24 UNIDADES",
+                                    "imagem": [
+                                        "http://192.168.203.24:5977/imagens/produto/150/7897161371017/agua-oxigenada-alyne-creme-30-volumes-100ml-com-24-unidades/1.png",
+                                        "http://192.168.203.24:5977/imagens/produto/150/7897161371017/agua-oxigenada-alyne-creme-30-volumes-100ml-com-24-unidades/2.png"
+                                    ],
+                                    "id_tipo": [
+                                        2
+                                    ],
+                                    "id_grupo": [
+                                        103
+                                    ],
+                                    "id_subgrupo": [
+                                        10325
+                                    ],
+                                    "categorizacao": [
+                                        {
+                                            "id_tipo": 2,
+                                            "descricao_tipo": "CATEGORIAS",
+                                            "grupo": [
+                                                {
+                                                    "id_grupo": 103,
+                                                    "descricao_grupo": "CORPO E ROSTO",
+                                                    "subgrupo": [
+                                                        {
+                                                            "id_subgrupo": 10325,
+                                                            "descricao_subgrupo": "AG OXIG/AMONIACO/EMULSAO"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "status": "A",
+                                    "quantidade": 0,
+                                    "quantidade_minima": 10.0,
+                                    "valor_minimo": 0.0,
+                                    "quantidade_min_ativacao": 0,
+                                    "valor_min_ativacao": 0.0,
+                                    "unidade_embalagem": "CX",
+                                    "quantidade_embalagem": 1,
+                                    "unidade_venda": "CX",
+                                    "quant_unid_venda": 24,
+                                    "multiplo_venda": 1,
+                                    "preco_tabela": 38.73,
+                                    "estoque": 1080,
+                                    "desconto": {},
+                                    "quantidade_bonificada": 1
+                                }
+                            ]
+                          },
+                          {
+                            "id_escalonado": 340,
+                            "id_distribuidor": 1,
+                            "descricao": "ABS INT GEL ANTIBAC C/AB C/28",
+                            "status": "A",
+                            "total_desconto": 0,
+                            "unificada": 1,
+                            "escalonado": [
+                                {
+                                    "id_escalonado": 340,
+                                    "id_distribuidor": 1,
+                                    "data_inicio": "2022-02-01 00:00:00.000000",
+                                    "data_final": "2023-01-15 10:14:49.017000",
+                                    "limite": 2400,
+                                    "status_escalonado": "A"
+                                }
+                            ],
+                            "faixa_escalonado": [
+                                {
+                                    "id_escalonado": 340,
+                                    "id_distribuidor": 1,
+                                    "sequencia": 1,
+                                    "faixa": 8,
+                                    "desconto": 5.0,
+                                    "unidade_venda": "UN"
+                                },
+                                {
+                                    "id_escalonado": 340,
+                                    "id_distribuidor": 1,
+                                    "sequencia": 2,
+                                    "faixa": 12,
+                                    "desconto": 7.0,
+                                    "unidade_venda": "UN"
+                                }
+                            ],
+                            "produto_escalonado": [
+                                {
+                                    "id_escalonado": 340,
+                                    "id_distribuidor": 1,
+                                    "id_produto": "1950-1",
+                                    "sku": "7896007551026",
+                                    "id_marca": 10901,
+                                    "descricao_marca": "INTIMUS",
+                                    "descricao_produto": "ABSORVENTE INTIMUS GEL ANTIBACTERIANO COM ABAS COM 28 UNIDADES",
+                                    "imagem": [
+                                        "http://192.168.203.24:5977/imagens/produto/150/7896007551026/absorvente-intimus-gel-antibacteriano-com-abas-com-28-unidades/1.png",
+                                        "http://192.168.203.24:5977/imagens/produto/150/7896007551026/absorvente-intimus-gel-antibacteriano-com-abas-com-28-unidades/2.png"
+                                    ],
+                                    "id_tipo": [
+                                        2
+                                    ],
+                                    "id_grupo": [
+                                        107
+                                    ],
+                                    "id_subgrupo": [
+                                        10703
+                                    ],
+                                    "categorizacao": [
+                                        {
+                                            "id_tipo": 2,
+                                            "descricao_tipo": "CATEGORIAS",
+                                            "grupo": [
+                                                {
+                                                    "id_grupo": 107,
+                                                    "descricao_grupo": "ABSORVENTES/USO PESSOAL INTIMO",
+                                                    "subgrupo": [
+                                                        {
+                                                            "id_subgrupo": 10703,
+                                                            "descricao_subgrupo": "CUID INTIMOS-ABSORV EXTERNOS"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "status": "A",
+                                    "quantidade": 0,
+                                    "unidade_embalagem": "CX",
+                                    "quantidade_embalagem": 16,
+                                    "unidade_venda": "UN",
+                                    "quant_unid_venda": 1,
+                                    "multiplo_venda": 4,
+                                    "preco_tabela": 12.06,
+                                    "estoque": 1582,
+                                    "desconto": {}
+                                }
+                            ]
+                          }
+                      ]
+                
+                Resposta_Tudo-ok-dados:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Dados enviados."
+                      dados: Lista com os objetos das ofertas
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+         
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '403':
+          description: "Usuário sem autorização para acessar recurso"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Acao-especifica-negada'
+
+              examples:
+
+                Resposta_Acao-especifica-negada:
+                  summary: "Resposta: Ação especifica negada"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado, tenha permissão suficiente mas não para realizar ação desejada."
+                    Saida-Real:
+                      status: 403
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Usuario tentando realizar ação por cliente não atrelado ao mesmo."
+
+        '404':
+          description: "Dados não-existentes"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-não-existentes'
+              
+              examples:
+                
+                Resposta_Dados-não-existentes:
+                  summary: "Resposta: Dados não-existentes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra mas não existam dado para serem encontrados"
+                    Saida-Real:
+                      status: 404
+                      resposta: 
+                        tipo: 7
+                        descricao: "Sem dados para retornar."
+
+  /marketplace/produtos:
+  
+    post:
+      tags:
+        - "Listar produtos do marketplace"
+      summary: POST - Listagem de produtos
+
+      description: >
+                        - Para este endpoint existem os filtros de busca:
+                          - Por tipo/grupo/subgrupo
+                          - Por campo de busca (descricao, sku, dun14, id_produto e desc_marca)
+                          - Por id_produto
+                          - Por id oferta
+                          - Por sku
+                          - Por marca
+                          - Por existência de desconto
+                          - Por valor de multiplo de venda
+                          - Por existência de estoque
+                          - Por existência de oferta campanha ou escalonado
+                          - Por grupos
+                          - Por subgrupos
+
+                        - Existem tambêm as ordenações por:
+                          - Maior preço
+                          - Menor preço
+                          - Recomendados
+                          - A à Z
+                          - Z à A
+
+                        - Vale ressaltar que os seguintes filtros não funcionam com o usuario não-logado:
+                            - Busca por existência de estoque
+                            - Busca por existência de desconto
+                            - Busca por existência de oferta desconto, campanha ou escalonado 
+                            - Ordenação de maior preço  
+                            - Ordenação de menor preço   
+
+                        * Tabelas Consultadas: PRODUTO, PRODUTO_DISTRIBUIDOR, PRODUTO_SUBGRUPO, SUBGRUPO, GRUPO_SUBGRUPO, GRUPO, TIPO, OFERTA, OFERTA_PRODUTO, OFERTA_CLIENTE, OFERTA_DESCONTO, OFERTA_BONIFICADO, OFERTA_ESCALONADO_FAIXA, PRODUTO_ESTOQUE, MARCA, TABELA_PRECO, TABELA_PRECO_CLIENTE, TABELA_PRECO_PRODUTO, FORNECEDOR, DISTRIBUIDOR, CLIENTE, e CLIENTE_DISTRIBUIDOR
+
+      security:
+        - {}
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-listar-produtos-marketplace'
+            examples:
+              Listagem Comum:  # <--- Nome do Exemplo dado
+                summary: Listagem correta
+                value:
+                  # vv Payload do exemplo vv
+                  id_distribuidor: 0
+                  id_cliente: 1
+                  id_produto:
+                    - '100-1'
+                    - '1000-1'
+                  id_oferta:
+                    - 451
+                  sku:
+                    - 7891150067097
+                  id_tipo: 2
+                  id_grupo: 107
+                  id_subgrupo: 10703
+                  busca: "Alyne"
+                  ordenar: 4
+                  estoque: false
+                  multiplo_venda: 1
+                  desconto: false
+                  tipo_oferta: 0
+                  marca: [10622]
+                  grupos: []
+                  subgrupos: []
+                  pagina: 1
+                  limite: 20
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Dados enviados."
+                      informacoes: 
+                        itens: 0
+                        paginas: 0
+                        pagina_atual: 0
+                      dados: Lista com os objetos dos produtos
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+                
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '403':
+          description: "Usuário sem autorização para acessar recurso"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Acao-especifica-negada'
+
+              examples:
+                
+                Resposta_Acao-especifica-negada:
+                  summary: "Resposta: Ação especifica negada"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado, tenha permissão suficiente mas não para realizar ação desejada."
+                    Saida-Real:
+                      status: 403
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Usuario tentando realizar ação por cliente não atrelado ao mesmo."
+
+        '404':
+          description: "Dados não-existentes"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-não-existentes'
+              
+              examples:
+                
+                Resposta_Dados-não-existentes:
+                  summary: "Resposta: Dados não-existentes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra mas não existam dado para serem encontrados"
+                    Saida-Real:
+                      status: 404
+                      resposta: 
+                        tipo: 7
+                        descricao: "Sem dados para retornar."
+
+  /marketplace/produtos/tipo-grupo-subgrupo:
+  
+    post:
+      tags:
+        - "Listar tipo/grupo/subgrupo para o marketplace"
+      summary: POST - Listagem de tipo, grupo e subgrupo
+
+      description: "
+                        * Tabelas Consultadas: MARCA
+                    "
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-listar-tipo-grupo-subgrupo-marketplace'
+            examples:
+              Listagem Comum:  # <--- Nome do Exemplo dado
+                summary: Listagem correta
+                value:
+                  # vv Payload do exemplo vv
+                  id_distribuidor: 0
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Token de sessão enviado."
+                      dados: [
+                        {
+                          "id_tipo": 1,
+                          "descricao_tipo": "CATEGORIAS",
+                          "grupo": [
+                              {
+                                  "id_grupo": 1,
+                                  "descricao_grupo": "TEMPEROS E CONDIMENTOS",
+                                  "subgrupo": [
+                                      {
+                                          "id_subgrupo": 5,
+                                          "descricao_subgrupo": "TEMPEROS/MOLHOS"
+                                      }
+                                  ]
+                              }
+                          ]
+                        }
+                      ]
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '404':
+          description: "Dados não-existentes"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-não-existentes'
+              
+              examples:
+                
+                Resposta_Dados-não-existentes:
+                  summary: "Resposta: Dados não-existentes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra mas não existam dado para serem encontrados"
+                    Saida-Real:
+                      status: 404
+                      resposta: 
+                        tipo: 7
+                        descricao: "Sem dados para retornar." 
+
+  /marketplace/produtos/cupons:
+  
+    post:
+      tags:
+        - "Listar cupons do marketplace"
+      summary: POST - Listagem de cupons
+
+      description: >
+                        * Tabelas Consultadas: PRODUTO, PRODUTO_DISTRIBUIDOR, PRODUTO_SUBGRUPO, SUBGRUPO, GRUPO_SUBGRUPO, GRUPO, TIPO, CUPOM, CUPOM_CLIENTE, CUPOM_ITENS, TIPO_CUPOM, TIPO_CUPOM_ITENS e MARCA      
+
+      security:
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-listar-cupons'
+            examples:
+              Listagem Comum:  # <--- Nome do Exemplo dado
+                summary: Listagem correta
+                value:
+                  # vv Payload do exemplo vv
+                  id_distribuidor: 0
+                  id_cliente: 1
+                  id_cupom: []
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Dados enviados."
+                      informacoes: 
+                        itens: 0
+                        paginas: 0
+                        pagina_atual: 0
+                      dados: [
+                        {
+                          "id_cupom": 169,
+                          "id_distribuidor": 1,
+                          "codigo_cupom": "PEDIDO_1_S_16%",
+                          "titulo": "Cupom de pedido para a dag de 16% para subgrupos selecionados",
+                          "descricao": "Cupom de pedido para a dag de 16% para subgrupos selecionados",
+                          "data_inicio": "2023-01-01 15:30:17.000000",
+                          "data_final": "2023-04-05 08:39:08.650000",
+                          "tipo_desconto": 1,
+                          "tipo_desconto_descricao": "Percentual",
+                          "desconto_valor": 0.0,
+                          "desconto_percentual": 16.0,
+                          "valor_limite": 99999.0,
+                          "valor_ativar": 150.0,
+                          "termos_uso": "Cupom de pedido para a dag de 16% para subgrupos selecionados",
+                          "status": "A",
+                          "reutiliza": 1000,
+                          "oculto": false,
+                          "bloqueado": false,
+                          "motivo_bloqueio": null,
+                          "tipo_cupom": 2,
+                          "tipo_cupom_descricao": "Pedido",
+                          "tipo_itens": 5,
+                          "tipo_itens_descricao": "Subgrupo",
+                          "itens": [
+                              "10101"
+                          ]
+                        }
+                      ]
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+                
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '403':
+          description: "Usuário sem autorização para acessar recurso"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Acao-especifica-negada'
+
+              examples:
+
+                Resposta_Acao-especifica-negada:
+                  summary: "Resposta: Ação especifica negada"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado, tenha permissão suficiente mas não para realizar ação desejada."
+                    Saida-Real:
+                      status: 403
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Usuario tentando realizar ação por cliente não atrelado ao mesmo."
+
+        '404':
+          description: "Dados não-existentes"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-não-existentes'
+              
+              examples:
+                
+                Resposta_Dados-não-existentes:
+                  summary: "Resposta: Dados não-existentes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra mas não existam dado para serem encontrados"
+                    Saida-Real:
+                      status: 404
+                      resposta: 
+                        tipo: 7
+                        descricao: "Sem dados para retornar."
+
+  /marketplace/produtos/cupons/validacao:
+  
+    post:
+      tags:
+        - "Validar cupons do marketplace"
+      summary: Valida o cupom escolhido para o cliente atual do usuario.
+
+      description: >
+                        - Este endpoint verifica se um cupom é valido. A identificação do cupom é feita por duas maneiras:
+                          - Por id
+                          - Por código
+
+                        - A prioridade é feita na ordem descrita acima.
+                        
+                        - Caso nenhum das opções seja fornecida, uma mensagem de erro é retornada.
+
+                        - Caso o codigo do cupom seja válido, o id será utilizado para a validação
+
+                        - A validação do cupom utiliza o id e é feita com as seguintes etapas.
+                          - Existência do cupom
+                          - Status
+                              - do cupom
+                              - do tipo do cupom
+                              - dos itens do cupom
+                          - Cliente está associado ao distribuidor do cupom
+                          - Data de validade
+                          - Bloqueio do cupom
+                          - Se o cliente pode utilizar o cupom
+                          - Se o cliente pode Reutilizar (Não implementado ainda)
+                          - se o cupom possui seus itens válidos
+
+      security:
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-validar-cupons'
+            examples:
+              Request Comum:  # <--- Nome do Exemplo dado
+                summary: Request correto
+                value:
+                  # vv Payload do exemplo vv
+                  id_cliente: 1
+                  id_cupom: 1
+                  codigo_cupom: "CLIENTE1"
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok-dados'
+
+              examples:
+                
+                Resposta_Tudo-ok-dados:
+                  summary: "Resposta: tudo ok com dados"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1 | 15
+                        descricao: Cupom valido | Cupom invalido
+                      dados:
+                        id_cupom: 1
+                        valido: true | false
+                        motivo: "Mensagem especifica para a situação da validade do cupom."
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+                
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '403':
+          description: "Usuário sem autorização para acessar recurso"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Acao-especifica-negada'
+
+              examples:
+
+                Resposta_Acao-especifica-negada:
+                  summary: "Resposta: Ação especifica negada"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado, tenha permissão suficiente mas não para realizar ação desejada."
+                    Saida-Real:
+                      status: 403
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Produto de distribuidor diferente dos permitido."
+
+  /marketplace/produtos/tipo-grupo-subgrupo/grupo/produtos-destaques:
+  
+    post:
+      tags:
+        - "Listar produtos destaques do grupo"
+      summary: Listagem dos produtos de maior destaque do grupo
+
+      description: >
+                      Listar produtos selecionados como os de maior destaque em um grupo especifico do distribuidor
+
+      security:
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-listar-produtos-destaque'
+            examples:
+              Request Comum:  # <--- Nome do Exemplo dado
+                summary: Request correto
+                value:
+                  # vv Payload do exemplo vv
+                  id_grupo: 1
+                  id_distribuidor: 0
+                  id_cliente: 1
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok-dados'
+
+              examples:
+                
+                Resposta_Tudo-ok-dados:
+                  summary: "Resposta: tudo ok com dados"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Produtos destaques enviados."
+                      dados: [
+                                {
+                                    "id_produto": "7604-1",
+                                    "descricao_produto": "KNORR MEU ASSADO 25G ALHO E CEBOLA",
+                                    "sku": "7891150009592",
+                                    "id_distribuidor": 2,
+                                    "imagens": [
+                                        "http://192.168.203.24:5977/imagens/produto/150/7891150009592/knorr-meu-assado-25g-alho-e-cebola/1.png",
+                                        "http://192.168.203.24:5977/imagens/produto/150/7891150009592/knorr-meu-assado-25g-alho-e-cebola/2.png",
+                                        "http://192.168.203.24:5977/imagens/produto/150/7891150009592/knorr-meu-assado-25g-alho-e-cebola/3.png"
+                                    ]
+                                }
+                            ]
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+                
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '404':
+          description: "Dados não-existentes"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-não-existentes'
+              
+              examples:
+                
+                Resposta_Dados-não-existentes:
+                  summary: "Resposta: Dados não-existentes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra mas não existam dado para serem encontrados"
+                    Saida-Real:
+                      status: 404
+                      resposta: 
+                        tipo: 7
+                        descricao: "Sem dados para retornar."
+
+
+components:
+
+  # Esquemas envolvendo autenticação/autorização
+  securitySchemes:
+
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: token
+      description: >
+                    - O envio deve ser realizado no header da request.
+
+                    - Existem endpoints que não precisam de token. Verificar quais necessitam nas descrições dos mesmos.
+
+                    - Nestes Endpoints, o token utilizado será considerado inválido caso algum dos critérios abaixo seja atendido:
+                        - Token não armazenado no banco de dados
+                        - Token com estrutura inválida (3 elementos separados por 2 pontos)
+                        - Token não criado pelo servidor (Erro no decode)
+                        - Token Vencido
+                        - Dados internos não batem
+                        - Alterar_senha (tag do token) está ativo.
+
+  schemas:
+
+    ## Body Requests
+
+    # Descontos
+    Body-request-listar-desconto-marketplace:
+      type: object
+      properties:
+        
+        id_distribuidor:
+          type: integer
+          description: "Identificação do distribuidor."
+        
+        id_cliente: 
+          type: integer
+          description: "Identificação do cliente."
+
+        ordenar:
+          type: integer
+          enum: [1,2,3,4,5,6]
+          default: 3
+          description: >
+                          Qual o tipo de ordenação que será aplicada:
+
+                            * 1 - Ordenação por maior preço
+                            * 2 - Ordenação por menor preço
+                            * 3 - Ordenação por recomendação (ranking)
+                            * 4 - não implementado ainda (padroniza para 3)
+                            * 5 - Ordenação por ordem alfabética (A à Z)
+                            * 6 - Ordenação por ordem alfabética (Z à A)
+
+        estoque:
+          type: boolean
+          default: false
+          description: > 
+                          Checa o estado do estoque do produto
+
+                            * true - Garante que todos os produtos tenham estoque
+                            * false - Não garante que todos os produtos tenham estoque
+
+        multiplo_venda:
+          type: integer
+          description: Valor do multiplo de venda desejado
+
+        tipo_oferta:
+          type: integer
+          enum: [0,1,2]
+          default: 0
+          description: >
+                          Qual o tipo de oferta desejada:
+
+                            * 0 - Nenhum
+                            * 1 - Campanha/Compre e Ganhe
+                            * 2 - Escalonado
+
+        marca: 
+          type: array
+          description: "Lista com os ids de marca."
+          items:
+            type: integer
+
+        grupos: 
+          type: array
+          description: "Lista com os ids de grupo."
+          items:
+            type: integer
+
+        subgrupos: 
+          type: array
+          description: "Lista com os ids de subgrupo."
+          items:
+            type: integer
+
+        pagina:
+          type: integer
+          description: Pagina da paginação atual
+          minimum: 1
+          default: 1
+
+        limite:
+          type: integer
+          description: Quantidade de itens por página
+          minimum: 1
+          default: 20
+
+      required:
+        - id_distribuidor
+        - id_cliente
+
+      example:
+
+        id_distribuidor: 0
+        id_cliente: 1
+        ordenar: 4
+        estoque: false
+        multiplo_venda: 1
+        tipo_oferta: 0
+        marca: [10622]
+        grupos: []
+        subgrupos: []
+        pagina: 1
+        limite: 20
+    
+    # Listar marcas
+    Body-request-listar-marcas-marketplace:
+      type: object
+      properties:
+        
+        id_distribuidor:
+          type: integer
+          description: "Identificação do distribuidor."
+
+        id_cliente: 
+          type: integer
+          description: "Identificação do cliente."
+
+        marca: 
+          type: array
+          description: "Lista com os ids de marca."
+          items:
+            type: integer
+
+        id_produto: 
+          type: array
+          description: "Lista com os ids de produto."
+          items:
+
+            type: string
+            description: "Identificação do produto."
+
+        id_tipo:
+          type: integer
+          description: "Identificação do tipo do produto da marca."
+
+        id_grupo:
+          type: integer
+          description: "Identificação do grupo do produto da marca."
+
+        id_subgrupo:
+          type: integer
+          description: "Identificação do subgrupo do produto da marca."
+
+        tipo_oferta:
+          type: integer
+          enum: [0,1,2,3]
+          default: 0
+          description: >
+                          Qual o tipo de oferta desejada:
+
+                            * 0 - Nenhum
+                            * 1 - Campanha/Compre e Ganhe
+                            * 2 - Escalonado
+                            * 3 - Campanha e Escalonado
+
+        grupos: 
+          type: array
+          description: "Lista com os ids de grupo."
+          items:
+            type: integer
+
+        subgrupos: 
+          type: array
+          description: "Lista com os ids de subgrupo."
+          items:
+            type: integer
+
+        desconto:
+          type: boolean
+          description: Caso seja requerido que todos os produtos tenham desconto
+
+        estoque:
+          type: boolean
+          default: false
+          description: > 
+                          Checa o estado do estoque do produto
+
+                            * true - Garante que todos os produtos tenham estoque
+                            * false - Não garante que todos os produtos tenham estoque
+
+      required:
+        - id_distribuidor
+
+      example:
+
+        id_distribuidor: 0
+        id_cliente: 1
+        id_tipo: 1
+        id_grupo: 2
+        id_subgrupo: 3
+        tipo_oferta: 0
+        grupos: []
+        subgrupos: []
+        id_produto: []
+        id_marca: []
+        desconto: false
+        estoque: false
+
+    # Ofertas
+    Body-request-listar-ofertas-marketplace:
+      type: object
+      properties:
+        
+        id_distribuidor:
+          type: integer
+          description: "Identificação do distribuidor."
+        
+        id_cliente: 
+          type: integer
+          description: "Identificação do cliente."
+        
+        id_oferta: 
+          type: array
+          description: "Lista com os ids de oferta."
+          items:
+
+            type: integer
+            description: "Identificação da oferta."
+
+        id_produto: 
+          type: array
+          description: "Lista com os ids de produto."
+          items:
+
+            type: string
+            description: "Identificação do produto."
+
+        sku: 
+          type: array
+          description: "Lista com os sku de produto."
+          items:
+
+            type: string
+            description: "sku do produto."
+
+        busca:
+          type: string
+          description: "Nome da marca ou do produto."
+
+        id_tipo:
+          type: integer
+          description: "Identificação do tipo."
+
+        id_grupo:
+          type: integer
+          description: "Identificação do grupo."
+
+        id_subgrupo:
+          type: integer
+          description: "Identificação do subgrupo."
+
+        id_orcamento:
+          type: integer
+          description: "Identificação do orcamento do usuario."
+
+        ordenar:
+          type: integer
+          enum: [1,2,3]
+          default: 1
+          description: >
+                          Qual o tipo de ordenação que será aplicada:
+
+                            * 1 - Ordenação por recomendação
+                            * 2 - Ordenação por mais recentes
+                            * 3 - Ordenação por mais antigas
+
+        estoque:
+          type: boolean
+          default: false
+          description: > 
+                          Checa o estado do estoque do produto
+
+                            * true - Garante que todos os produtos tenham estoque
+                            * false - Não garante que todos os produtos tenham estoque
+
+        multiplo_venda:
+          type: integer
+          description: Valor do multiplo de venda desejado
+
+        desconto:
+          type: boolean
+          description: Caso seja requerido que todos os produtos tenham desconto
+
+        tipo_oferta:
+          type: integer
+          enum: [0,1,2]
+          default: 0
+          description: >
+                          Qual o tipo de oferta desejada:
+
+                            * 0 - Nenhum
+                            * 1 - Campanha/Compre e Ganhe
+                            * 2 - Escalonado
+
+        marca: 
+          type: array
+          description: "Lista com os ids de marca."
+          items:
+            type: integer
+
+        grupos: 
+          type: array
+          description: "Lista com os ids de grupo."
+          items:
+            type: integer
+
+        subgrupos: 
+          type: array
+          description: "Lista com os ids de subgrupo."
+          items:
+            type: integer
+
+        paginar:
+          type: boolean
+          description: "Força a paginação em todos os casos. Contrario não é verdade"       
+
+        pagina:
+          type: integer
+          description: Pagina da paginação atual
+          minimum: 1
+          default: 1
+
+        limite:
+          type: integer
+          description: Quantidade de itens por página
+          minimum: 1
+          default: 20
+
+      required:
+        - id_distribuidor
+        - id_cliente
+
+      example:
+
+        id_distribuidor: 0
+        id_cliente: 1
+        id_oferta:
+          - 451
+          - 454
+        id_produto: ["100-1"]
+        sku: ["7897161371024"]
+        id_tipo: 2
+        id_grupo: 107
+        id_subgrupo: 10703
+        id_orcamento: 1
+        busca: "Alyne"
+        paginar: true
+        ordenar: 4
+        estoque: false
+        multiplo_venda: 1
+        desconto: false
+        tipo_oferta: 0
+        marca: [10622]
+        grupos: []
+        subgrupos: []
+        pagina: 1
+        limite: 20
+
+    # Listar produtos marketplace
+    Body-request-listar-produtos-marketplace:
+      type: object
+      properties:
+        
+        id_distribuidor:
+          type: integer
+          description: "Identificação do distribuidor."
+        
+        id_cliente: 
+          type: integer
+          description: "Identificação do cliente."
+        
+        id_produto: 
+          type: array
+          description: "Lista com os ids de produto."
+          items:
+
+            type: string
+            description: "Identificação do produto."
+
+        id_oferta: 
+          type: array
+          description: "Lista com os ids de oferta."
+          items:
+
+            type: string
+            description: "Identificação da oferta."
+
+        sku: 
+          type: array
+          description: "Lista com os skus de produto."
+          items:
+
+            type: string
+            description: "Identificação do sku."
+
+        busca:
+          type: string
+          description: "Texto do campo de busca."
+
+        id_tipo:
+          type: integer
+          description: "Identificação do tipo."
+
+        id_grupo:
+          type: integer
+          description: "Identificação do grupo."
+
+        id_subgrupo:
+          type: integer
+          description: "Identificação do subgrupo."
+
+        ordenar:
+          type: integer
+          enum: [1,2,3,4,5,6]
+          default: 3
+          description: >
+                          Qual o tipo de ordenação que será aplicada:
+
+                            * 1 - Ordenação por maior preço
+                            * 2 - Ordenação por menor preço
+                            * 3 - Ordenação por recomendação (ranking)
+                            * 4 - não implementado ainda (padroniza para 3)
+                            * 5 - Ordenação por ordem alfabética (A à Z)
+                            * 6 - Ordenação por ordem alfabética (Z à A)
+
+        estoque:
+          type: boolean
+          default: false
+          description: > 
+                          Checa o estado do estoque do produto
+
+                            * true - Garante que todos os produtos tenham estoque
+                            * false - Não garante que todos os produtos tenham estoque
+
+        multiplo_venda:
+          type: integer
+          description: Valor do multiplo de venda desejado
+
+        desconto:
+          type: boolean
+          description: Caso seja requerido que todos os produtos tenham desconto
+
+        tipo_oferta:
+          type: integer
+          enum: [0,1,2,3]
+          default: 0
+          description: >
+                          Qual o tipo de oferta desejada:
+
+                            * 0 - Nenhum
+                            * 1 - Campanha/Compre e Ganhe
+                            * 2 - Escalonado
+                            * 3 - Campanha e Escalonado
+
+        marca: 
+          type: array
+          description: "Lista com os ids de marca."
+          items:
+            type: integer
+
+        grupos: 
+          type: array
+          description: "Lista com os ids de grupo."
+          items:
+            type: integer
+
+        subgrupos: 
+          type: array
+          description: "Lista com os ids de subgrupo."
+          items:
+            type: integer
+
+        pagina:
+          type: integer
+          description: Pagina da paginação atual
+          minimum: 1
+          default: 1
+
+        limite:
+          type: integer
+          description: Quantidade de itens por página
+          minimum: 1
+          default: 20
+
+      required:
+        - id_distribuidor
+        - id_cliente
+
+      example:
+
+        id_distribuidor: 0
+        id_cliente: 1
+        id_produto:
+          - '100-1'
+          - '1000-1'
+        id_oferta:
+          - 451
+        sku:
+          - 7891150067097
+        id_tipo: 2
+        id_grupo: 107
+        id_subgrupo: 10703
+        busca: "Alyne"
+        ordenar: 4
+        estoque: false
+        multiplo_venda: 1
+        desconto: false
+        tipo_oferta: 0
+        marca: [10622]
+        grupos: []
+        subgrupos: []
+        pagina: 1
+        limite: 20
+
+    # Listar tipo-grupo-subgrupo marketplace
+    Body-request-listar-tipo-grupo-subgrupo-marketplace:
+      type: object
+      properties:
+        
+        id_distribuidor:
+          type: integer
+          description: "Identificação do distribuidor. (Obrigatorio)"
+
+      required:
+        - id_distribuidor
+
+      example:
+
+        id_distribuidor: 0
+
+    # Listar dos cupons do marketplace
+    Body-request-listar-cupons:
+      type: object
+      properties:
+        
+        id_distribuidor:
+          type: integer
+          description: "Identificação do distribuidor."
+        
+        id_cliente: 
+          type: integer
+          description: "Identificação do cliente."
+
+        id_cupom: 
+          type: array
+          description: "Lista com os ids de cupons."
+          items:
+
+            type: integer
+            description: "Identificação do cupom."
+
+      required:
+        - id_distribuidor
+        - id_cliente
+
+      example:
+
+        id_distribuidor: 0
+        id_cliente: 1
+        id_cupom: []
+
+    # Validar cupons do marketpalce
+    Body-request-validar-cupons:
+      type: object
+      properties:
+        
+        id_cliente: 
+          type: integer
+          description: "ID do cliente escolhido do usuario."
+        
+        id_cupom: 
+          type: integer
+          description: "ID do cupom que deve ser checado."
+
+        codigo_cupom: 
+          type: string
+          description: "Codigo do cupom oculto."
+
+      required:
+        - id_cliente
+
+      example:
+
+        id_cliente: 1
+        id_cupom: 1
+        codigo_cupom: "CLIENTE1"
+
+    # Listar produtos destaques
+    Body-request-listar-produtos-destaque:
+      type: object
+      properties:
+        
+        id_grupo:
+          type: integer
+          description: "Id do grupo que será verificado os destaques"
+        
+        id_distribuidor: 
+          type: integer
+          description: "Id do distribuidor pai do grupo"
+        
+        id_cliente: 
+          type: integer
+          description: "Id do cliente"
+
+      required:
+        - id_grupo
+        - id_distribuidor
+
+      example:
+
+        id_grupo: 1
+        id_distribuidor: 0
+        id_cliente: 1
+
+    ## Body response
+
+    # Resposta para Tudo ok
+    Resposta_Tudo-ok:
+      type: object
+      description: "Caso a request ocorra sem nenhum problema."
+
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 1
+          descricao: "Mensagem específica para a situação"
+
+    # Resposta para Tudo ok com dados de retorno
+    Resposta_Tudo-ok-dados:
+      type: object
+      description: "Caso a request ocorra sem nenhum problema."
+
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+        dados:
+          type: array
+          description: Lista com os dados requeridos
+          items:
+            type: object
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 1
+          descricao: Dados encontrados.
+        dados: Holder dos dados encontrados
+
+    # Resposta para Tudo ok paginado
+    Resposta_Tudo-ok-paginado:
+      type: object
+      description: "Caso a request ocorra sem nenhum problema."
+
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+        informacoes:
+          type: object
+          description: "Quarda informações sobre a paginação das informações."
+          properties:
+
+            itens:
+              type: integer
+              description: "Quantidade Máxima de informações a serem paginadas."
+
+            paginas:
+              type: integer
+              description: "Quantidade Máxima de paginas disponiveis."
+
+            pagina_atual:
+              type: integer
+              description: "Pagina atualmente da paginação."
+
+        dados:
+          type: array
+          description: Lista com as informações dos produtos
+          items:
+
+            type: object
+            description: Produto
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 1
+          descricao: "Dados enviados."
+        informacoes: 
+          itens: 0
+          paginas: 0
+          pagina_atual: 0
+        dados: "Lista com os produtos do filtro"
+
+    # Resposta para Houveram erros
+    Resposta_Houveram-erros:
+      type: object
+      description: "Caso a request ocorra e algum problema ocorra."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+
+          situacao:
+            type: object
+            description: "Holder das infomrações dos atributos do erro"
+            properties:
+
+              sucessos:
+                type: integer
+                description: quantidade de sucessos que houveram durante a transação
+
+              falhas:
+                type: integer
+                description: quantidade de falhas que houveram durante a transação
+
+              descricao: 
+                type: array
+                description: Holder dos objetos de falhas
+                items:
+
+                  type: object
+                  description: Holder dos objetos contendos os agentes responsáveis pelo erro e uma descrição do erro
+                  properties:
+
+                      motivo:
+                        type: string
+                        description: Descrição especifica do erro
+                      
+                      combinação:
+                        type: object
+                        description: Holder dos agentes causadores do erro
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 15
+          descricao: "Token de sessão enviado."
+        situacao:
+          sucessos: 0
+          falhas: 1
+          descricao: 
+            - motivo: 'Motivo especifico para o erro.'
+              combinacao: 
+                chaves: Chaves unicas para descobrir qual o erro
+
+    # Resposta para Token válido
+    Resposta_Token-valido:
+      type: object
+      description: Caso o token seja enviado na request, ele será validado e, caso esteja válido, será devolvido.
+      
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+        token:
+          type: string
+          description: Token de login do usuário
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 1
+          descricao: "Token de sessão reenviado."
+        token: "token do usuario para uso normal"
+
+    # Resposta para Permissão insuficiente
+    Resposta_Permissao-insuficiente:
+      type: object
+      description: Caso o token seja enviado na request, ele seja validado mas o usuário não tenha permissão suficiente para realizar ação desejada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 403
+        resposta: 
+          tipo: 12
+          descricao: "Usuário sem permissão para realizar ação"
+
+    # Resposta para ação especifica negada
+    Resposta_Acao-especifica-negada:
+      type: object
+      description: Caso o token seja enviado na request, ele seja validado, tenha permissão de realizar ação, mas tente fazer-lo por outro alguem.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 403
+        resposta: 
+          tipo: 13
+          descricao: "Ação recusada: Produto de distribuidor diferente dos permitido."
+
+    # Resposta para ação especifica negada por erro
+    Resposta_Acao-especifica-negada-erro:
+      type: object
+      description: Caso o token seja enviado na request, ele seja validado, tenha permissão de realizar ação, mas tente fazer algo que não pode acontecer.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 13
+          descricao: "Ação recusada: Mensagem especifica."
+
+    # Resposta para Token inválido
+    Resposta_Token-invalido:
+      type: object
+      description: Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 11
+          descricao: "Token inválido."
+
+    # Resposta para Token inválido
+    Resposta_Token-nao-enviado:
+      type: object
+      description: Caso o token não seja enviado na request.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 13
+          descricao: "Ação recusada: Token não enviado."
+
+    # Resposta para Dados não existentes
+    Resposta_Dados-não-existentes:
+      type: object
+      description: "Caso a request ocorra mas não existam dado para serem encontrados"
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 404
+        resposta: 
+          tipo: 7
+          descricao: "Sem dados para retornar."
+
+    # Resposta para Dados não encontrados
+    Resposta_Dados-não-encontrados:
+      type: object
+      description: "Caso a request ocorra mas não sejam encontrados os dados pedidos"
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 6
+          descricao: "Dados não encontrados para estes filtros."
+
+    # Resposta para Dados inválidos
+    Resposta_Dados-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 2
+          descricao: "Lista com as chaves que são inválidas"
+
+    # Resposta para Dados faltantes
+    Resposta_Dados-faltantes:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria não seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 3
+          descricao: "Lista com as chaves que estão faltando"
+
+    # Resposta para Valores inválidos
+    Resposta_Valores-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos).
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 4
+          descricao: "Lista com as chaves que possuem valores do tipo incorretos"
+
+    # Resposta para Valores nulos
+    Resposta_Valores-nulos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 14
+          descricao: "Lista com as chaves que possuem valores nulos"
+    
+    # Resposta para Senha inválida
+    Resposta_Senha-invalida:
+      type: object
+      description: Para caso a request seja feita e a senha esteja em um tamanho inválido.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 8
+          descricao: "Senha fora do padrão."
+
+    # Resposta para Registro não-existente
+    Resposta_Registro-nao-existente:
+      type: object
+      description: mensagem especifica para a situação.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 409
+        resposta: 
+          tipo: 5
+          descricao: "Mensagem especifica"
+
+    # Resposta para Registro já-existente
+    Resposta_Registro-ja-existente:
+      type: object
+      description: mensagem especifica para a situação.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 409
+        resposta: 
+          tipo: 5
+          descricao: "Mensagem especifica"

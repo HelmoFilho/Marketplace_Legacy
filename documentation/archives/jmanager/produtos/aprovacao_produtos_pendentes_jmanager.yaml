@@ -1,0 +1,605 @@
+openapi: 3.0.0
+
+info:
+  title: "API do projeto B2B"
+  description: "Documentação da API do projeto B2B 2.0."
+  version: 0.2.0
+
+servers:
+  - url: 'https://wsmarketplace-dev.guarany.com.br/api/v1'
+    description: Production server
+
+tags:
+  - name: "Alteração de status de produtos pendentes"
+    description: "ALtera o status de aprovação de um produto pendente enviado"
+
+paths:
+  
+  /jmanager/produtos/pendentes/status:
+  
+    post:
+      tags:
+        - "Alteração de status de produtos pendentes"
+      summary: POST - Aprova/Reprova um produto pendente
+
+      description: "
+                      - Realiza todo o proceso de aprovação/reprovação de produtos e distribuição dos dados entre as tabelas.\r\n
+                        * Tabelas Consultadas: JMANAGER_USUARIO \r\n
+                        * Tabelas Alteradas: API_PRODUTO, MARCA, FORNECEDOR, TIPO, GRUPO, GRUPO_SUBGRUPO, SUBGRUPO, PRODUTO_SUBGRUPO, PRODUTO, PRODUTO_DISTRIBUIDOR e PRODUTO_DISTRIBUIDOR_ID
+                    "
+
+      security:
+        - ApiKeyAuth: [] 
+
+      requestBody:
+        description: "Body necessário para realizar o login."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request'
+            examples:
+              Alteração de status:  # <--- Nome do Exemplo dado
+                summary: Alteração de status
+                value:
+                  # vv Payload do exemplo vv
+                  acao: "aprovar"
+                  produtos: 
+                    - id_distribuidor: 1
+                      cod_prod_distr: 0000702
+                      motivo_reprovado: "motivo qualquer"
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Houveram-erros'
+              
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 15
+                        descricao: "Houve erros com a transação."
+                      sucessos: 0
+                      falhas: 1
+                      situacao: 
+                        - distribuidor: 
+                            motivo: 'Distribuidor não existe.'
+                            combinacao: 
+                              - variaveis_de_controle
+
+        '201':
+          description: "Recurso Criado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+
+              examples:
+
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 201
+                      resposta: 
+                        tipo: 1
+                        descricao: "Produtos aprovados|reprovados com sucesso."
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+                
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '403':
+          description: "Usuário sem autorização para acessar recurso"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Permissao-insuficiente'
+              
+              examples:
+                
+                Resposta_Permissao-insuficiente:
+                  summary: "Resposta: Permissão insuficiente"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado mas o usuário não tenha permissão suficiente para realizar ação desejada."
+                    Saida-Real:
+                      status: 403
+                      resposta: 
+                        tipo: 12
+                        descricao: "Usuário sem permissão para realizar ação"
+                    
+
+components:
+
+  # Esquemas envolvendo autenticação/autorização
+  securitySchemes:
+
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: token
+      description: >
+                    - O envio do token é OBRIGATÓRIO. 
+
+                    - O envio deve ser realizado no header da request.
+
+                    - A permissão minima para acessar este endpoint é a de COORDENADOR.
+
+                    - Neste Endpoint, o token utilizado será considerado inválido caso algum dos critérios abaixo seja atendido:
+                        - Token não armazenado no banco de dados
+                        - Token com estrutura inválida (3 elementos separados por 2 pontos)
+                        - Token não criado pelo servidor (Erro no decode)
+                        - Token Vencido
+                        - Dados internos não batem
+                        - Alterar_senha (tag do token) está ativo.
+      
+  schemas:
+
+    # Response Body padrão
+    Body-request:
+      type: object
+      properties:
+        
+        acao:
+          type: string
+          description: "Ação que será realizada no serviço."
+          enum:
+            - aprovar
+            - reprovar
+        
+        produtos: 
+          type: array
+          description: "Holder das informações de produtos."
+          items:
+
+            type: object
+            properties:
+
+              id_distribuidor:
+                type: integer
+                description: "ID do distribuidor do produto."
+
+              cod_prod_distr:
+                type: string
+                description: "Codigo de cadastro de produto - cod_prod_distr."
+
+              motivo_reprovado:
+                type: string
+                default: null
+                description: "Motivo da reprovação do produto."
+
+            required:
+              - id_distribuidor
+              - cod_prod_distr
+
+      required:
+        - acao
+        - produtos
+
+      example:
+
+        acao: "aprovar"
+        produtos: 
+          - id_distribuidor: 1
+            cod_prod_distr: 0000702
+            motivo_reprovado: "motivo qualquer"
+ 
+    # Resposta para Tudo ok
+    Resposta_Tudo-ok:
+      type: object
+      description: "Caso a request ocorra sem nenhum problema."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 201
+        resposta: 
+          tipo: 1
+          descricao: "Produtos aprovados|reprovados com sucesso."
+
+    # Resposta para Houveram erros
+    Resposta_Houveram-erros:
+      type: object
+      description: "Caso a request ocorra e algum problema ocorra."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+
+          sucessos:
+            type: integer
+            description: quantidade de sucessos que houveram durante a transação
+
+          falhas:
+            type: integer
+            description: quantidade de falhas que houveram durante a transação
+
+          situacao: 
+            type: array
+            description: Holder dos objetos de falhas
+            properties:
+
+              Erro-especifico:
+                type: object
+                description: Holder dos objetos contendos os agentes responsáveis pelo erro e uma descrição do erro
+                properties:
+
+                  motivo:
+                    type: string
+                    description: Descrição especifica do erro
+                  
+                  combinação:
+                    type: object
+                    description: Holder dos agentes causadores do erro
+                    properties:
+
+                      variaveis_de_controle:
+                        description: Variaveis que ditam o objeto que causou o erro
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 15
+          descricao: "Houve erros com a transação."
+        sucessos: 0
+        falhas: 1
+        situacao: 
+          - distribuidor: 
+              motivo: 'Distribuidor não existe.'
+              combinacao: 
+                - variaveis_de_controle
+
+    # Resposta para Permissão insuficiente
+    Resposta_Permissao-insuficiente:
+      type: object
+      description: Caso o token seja enviado na request, ele seja validado mas o usuário não tenha permissão suficiente para realizar ação desejada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 12
+          descricao: "Usuário sem permissão para realizar ação"
+
+    # Resposta para Token inválido
+    Resposta_Token-invalido:
+      type: object
+      description: Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 11
+          descricao: "Token inválido."
+
+    # Resposta para Token inválido
+    Resposta_Token-nao-enviado:
+      type: object
+      description: Caso o token não seja enviado na request.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 13
+          descricao: "Ação recusada: Token não enviado."
+
+    # Resposta para Dados inválidos
+    Resposta_Dados-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 2
+          descricao: "Lista com as chaves que são inválidas"
+
+    # Resposta para Dados faltantes
+    Resposta_Dados-faltantes:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria não seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 3
+          descricao: "Lista com as chaves que estão faltando"
+
+    # Resposta para Valores inválidos
+    Resposta_Valores-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos).
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 4
+          descricao: "Lista com as chaves que possuem valores do tipo incorretos"
+
+    # Resposta para Valores nulos
+    Resposta_Valores-nulos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 14
+          descricao: "Lista com as chaves que possuem valores nulos"

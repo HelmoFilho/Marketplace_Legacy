@@ -1,0 +1,359 @@
+openapi: 3.0.0
+
+info:
+  title: "API do projeto B2B"
+  description: "Documentação da API do projeto B2B 2.0."
+  version: 0.2.0
+
+tags:
+  - name: "Listar todos os tipo/grupo/subgrupo para o jmanager"
+    description: "Listagem de tipo/grupo/subgrupo dependentes do distibuidor"
+
+servers:
+  - url: 'https://wsmarketplace-dev.guarany.com.br/api/v1'
+    description: Production server
+
+paths:
+  
+  /jmanager/produtos/tipo-grupo-subgrupo/geral:
+  
+    post:
+      tags:
+        - "Listar tipo/grupo/subgrupo para o jmanager"
+      summary: POST - Listagem de tipo, grupo e subgrupo
+
+      description: "
+                        * Tabelas Consultadas: TIPO, GRUPO, GRUPO_SUBGRUPO, SUBGRUPO
+                    "
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request'
+            examples:
+              Listagem Comum:  # <--- Nome do Exemplo dado
+                summary: Listagem correta
+                value:
+                  # vv Payload do exemplo vv
+                  id_distribuidor: 0
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Token de sessão enviado."
+                      dados: "Lista com as informações de tipo/grupo/subgrupo"
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+              
+              examples:
+
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '404':
+          description: "Dados não-existentes"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-não-existentes'
+              
+              examples:
+                
+                Resposta_Dados-não-existentes:
+                  summary: "Resposta: Dados não-existentes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra mas não existam dado para serem encontrados"
+                    Saida-Real:
+                      status: 404
+                      resposta: 
+                        tipo: 7
+                        descricao: "Sem dados para retornar."             
+
+components:
+      
+  schemas:
+
+    # Response Body padrão
+    Body-request:
+      type: object
+      properties:
+        
+        id_distribuidor:
+          type: integer
+          description: "Identificação do distribuidor."
+
+      required:
+        - id_distribuidor
+
+      example:
+
+        id_distribuidor: 0
+ 
+    # Resposta para Tudo ok
+    Resposta_Tudo-ok:
+      type: object
+      description: "Caso a request ocorra sem nenhum problema."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+
+          dados:
+            type: array
+            description: "Holder com os dados de tipo/grupo/subgrupo"
+            items:
+
+              type: object
+              description: "Informações de tipo/grupo/subgrupo"
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 1
+          descricao: "Token de sessão enviado."
+        dados: Lista com as informações de tipo/grupo/subgrupo
+
+    # Resposta para Dados não existentes
+    Resposta_Dados-não-existentes:
+      type: object
+      description: "Caso a request ocorra mas não existam dado para serem encontrados"
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 404
+        resposta: 
+          tipo: 7
+          descricao: "Sem dados para retornar."
+
+    # Resposta para Dados inválidos
+    Resposta_Dados-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 2
+          descricao: "Lista com as chaves que são inválidas"
+
+    # Resposta para Dados faltantes
+    Resposta_Dados-faltantes:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria não seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 3
+          descricao: "Lista com as chaves que estão faltando"
+
+    # Resposta para Valores inválidos
+    Resposta_Valores-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos).
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 4
+          descricao: "Lista com as chaves que possuem valores do tipo incorretos"
+
+    # Resposta para Valores nulos
+    Resposta_Valores-nulos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 14
+          descricao: "Lista com as chaves que possuem valores nulos"

@@ -1,0 +1,1313 @@
+openapi: 3.0.0
+
+info:
+  title: "API do projeto B2B"
+  description: "Documentação da API do projeto B2B 2.0."
+  version: 0.2.0
+
+tags:
+  - name: "Cadastro de JManager"
+    description: "Criação/Modificação de um registro de usuario jmanager"
+
+servers:
+  - url: 'https://wsmarketplace-dev.guarany.com.br/api/v1'
+    description: Production server
+
+paths:
+  
+  /jmanager/controle-usuarios/cadastro:
+  
+    post:
+      tags:
+        - "Cadastro de JManager"
+      summary: POST - Criação de um usuário jmanager
+
+      description: "
+                        * Tabelas Consultadas: JMANAGER_PERFIL, JMANAGER_CARGO e DISTRIBUIDOR \r\n
+                        * Tabelas Alteradas: JMANAGER_USUARIO e JMANAGER_USUARIO_DISTRIBUIDOR
+                    "
+
+      security:
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-post'
+            examples:
+              Criação Comum:  # <--- Nome do Exemplo dado
+                summary: Criação correta
+                value:
+                  # vv Payload do exemplo vv
+                  email: "email@servidor.com"
+                  senha: "meidi291923jduasj83d8qs8da932kd2"
+                  nome_completo: "Pedro alvares cabral"
+                  cpf: "99999999999"
+                  id perfil: 1 
+                  id cargo: 1 
+                  id distribuidor: 1
+                  telefone: "85999999999"
+                  cep: 99999999
+                  endereco: "Rua XIII de maio"
+                  endereco_num: 500
+                  complemento: "Perto do IFCE"
+                  bairro: "Parangaba"
+                  cidade: "Fortaleza"
+                  estado: "CE"
+                  solicitar_senha: "S"
+ 
+      responses:
+        '201':
+          description: "Recurso Criado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 201
+                      resposta: 
+                        tipo: 1
+                        descricao: "Cadastro do jmanager concluido."
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+                  - $ref: '#/components/schemas/Resposta_Acao-especifica-negada-erro'
+              
+              examples:
+
+                Resposta_Acao-especifica-negada-erro:
+                  summary: "Resposta: Ação especifica negada por erro"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado, tenha permissão de realizar ação, mas tente fazer algo que não pode acontecer."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Mensagem especifica."
+                
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '403':
+          description: "Usuário sem autorização para acessar recurso"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Permissao-insuficiente'
+
+              examples:
+                
+                Resposta_Permissao-insuficiente:
+                  summary: "Resposta: Permissão insuficiente"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado mas o usuário não tenha permissão suficiente para realizar ação desejada."
+                    Saida-Real:
+                      status: 403
+                      resposta: 
+                        tipo: 12
+                        descricao: "Usuário sem permissão para realizar ação"
+
+        '409':
+          description: "Conflito na resposta (Normalmente para o pedido de um recurso que, supostamente, deveria existir mas não existe e vice-versa)."
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Registro-ja-existente'
+
+              examples:
+
+                Resposta_Registro-ja-existente:
+                  summary: "Resposta: Registro já-existente"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso um usuario com o email e o cpf já exista."
+                    Saida-Real:
+                      status: 409
+                      resposta: 
+                        tipo: 5
+                        descricao: "Registro já existe."             
+
+    put:
+      tags:
+        - "Cadastro de JManager"
+      summary: PUT - Alterações cadastrais de um usuário jmanager
+
+      description: "
+                        * Tabelas Consultadas: JMANAGER_PERFIL, JMANAGER_CARGO, JMANAGER_USUARIO_DISTRIBUIDOR e DISTRIBUIDOR \r\n
+                        * Tabelas Alteradas: JMANAGER_USUARIO
+                    "
+
+      security:
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Request Body."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request-put'
+            examples:
+              Alteração Comum:  # <--- Nome do Exemplo dado
+                summary: Alteração correta
+                value:
+                  # vv Payload do exemplo vv
+                  id_usuario: 1
+                  nome_completo: jose helmo
+                  cpf: 99999999999
+                  id_perfil: 1 
+                  id_cargo: 1 
+                  telefone: "85999999999"
+                  cep: 99999999
+                  endereco: "Rua XIII de maio"
+                  endereco_num: 500
+                  complemento: "Perto do IFCE"
+                  bairro: "Parangaba"
+                  cidade: "Fortaleza"
+                  estado: "CE"
+                  status: "S"
+                  solicitar_senha: "S"
+
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+                  - $ref: "#/components/schemas/Resposta_Dados-não-alterados"
+
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Mudança do registro jmanager concluido."
+
+                Resposta_Dados-não-alterados:
+                  summary: "Resposta: Dados não-alterados"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request de alteração seja requerida mas nada seja alterado devido a dados invalidos"
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 16
+                        descricao: "Não houveram modificações na transação."
+
+        '400':
+          description: "Erro de sintaxe do usuário"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+                  - $ref: '#/components/schemas/Resposta_Acao-especifica-negada-erro'
+              
+              examples:
+
+                Resposta_Acao-especifica-negada-erro:
+                  summary: "Resposta: Ação especifica negada por erro"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado, tenha permissão de realizar ação, mas tente fazer algo que não pode acontecer."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Mensagem especifica."
+                
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: Dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas."
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: Dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando."
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: Valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos)."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos."
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: Valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 400
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+        '403':
+          description: "Usuário sem autorização para acessar recurso"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Permissao-insuficiente'
+
+              examples:
+                
+                Resposta_Permissao-insuficiente:
+                  summary: "Resposta: Permissão insuficiente"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele seja validado mas o usuário não tenha permissão suficiente para realizar ação desejada."
+                    Saida-Real:
+                      status: 403
+                      resposta: 
+                        tipo: 12
+                        descricao: "Usuário sem permissão para realizar ação"
+
+        '409':
+          description: "Conflito na resposta (Normalmente para o pedido de um recurso que, supostamente, deveria existir mas não existe e vice-versa)."
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Registro-nao-existente'
+
+              examples:
+                
+                Resposta_Registro-nao-existente:
+                  summary: "Resposta: Registro não-existente"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o registro do usuario não exista."
+                    Saida-Real:
+                      status: 409
+                      resposta: 
+                        tipo: 5
+                        descricao: "Registro não existe." 
+
+components:
+
+  # Esquemas envolvendo autenticação/autorização
+  securitySchemes:
+
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: token
+      description: >
+                    - O envio do token é OBRIGATÓRIO. 
+
+                    - O envio deve ser realizado no header da request.
+
+                    - A permissão minima para acessar este endpoint é:
+                        - ADMINISTRADOR para o método POST
+                        - ADMINISTRADOR ou o PRÓPRIO usuario para o método PUT
+                            - ADMINISTRADOR pode alterar status, alterar_senha, perfil (menos para root) e cargo
+
+                    - Neste Endpoint, o token utilizado será considerado inválido caso algum dos critérios abaixo seja atendido:
+                        - Token não armazenado no banco de dados
+                        - Token com estrutura inválida (3 elementos separados por 2 pontos)
+                        - Token não criado pelo servidor (Erro no decode)
+                        - Token Vencido
+                        - Dados internos não batem
+                        - Alterar_senha (tag do token) está ativo.
+      
+  schemas:
+
+    # Response Body post
+    Body-request-post:
+      type: object
+      properties:
+
+        id_distribuidor:
+          type: integer
+          description: Identificação do distribuidor do jmanager.
+
+        email:
+          type: string
+          description: Email do usuario. (OBRIGATÓRIO)
+          maxLength: 200
+
+        senha:
+          type: string
+          description: Senha do usuario. (OBRIGATÓRIO)
+          maxLength: 32
+          minLength: 32
+
+        nome_completo:
+          type: string
+          description: Nome completo o usuário. Minimo de duas palavras (OBRIGATÓRIO)
+          maxLength: 500
+          pattern: ^[A-ZÀ-Ÿ][A-zÀ-ÿ']+\s([A-zÀ-ÿ']\s?)*[A-ZÀ-Ÿ][A-zÀ-ÿ']+$
+
+        cpf:
+          type: string
+          description: CPF do usuário. String numérica inteira. (OBRIGATÓRIO)
+          maxLength: 11
+
+        id_perfil:
+          type: integer
+          description: Identificação do perfil do jmanager. (OBRIGATÓRIO)
+
+        id_cargo:
+          type: number
+          description: Identificação do cargo do jmanager. (OBRIGATÓRIO)
+
+        telefone:
+          type: string
+          description: Se o usuario clicou em manter-logado. (OBRIGATÓRIO)
+          maxLength: 20
+
+        cep:
+          type: integer
+          description: CEP do usuário. (OBRIGATÓRIO)
+
+        endereco:
+          type: string
+          description: Endereço do usuário sem número. (OBRIGATÓRIO)
+          maxLength: 100
+
+        endereco_num:
+          type: integer
+          description: Número do endereço do usuário. (OBRIGATÓRIO)
+
+        complemento:
+          type: string
+          description: Complemento o endereço do usuário. (OPCIONAL)
+          maxLength: 100
+
+        bairro:
+          type: string
+          description: Bairro do endereço do usuário. (OBRIGATÓRIO)
+          maxLength: 500
+
+        cidade:
+          type: string
+          description: Cidade do usuário. (OBRIGATÓRIO)
+          maxLength: 100
+
+        estado:
+          type: string
+          description: Estado do usuário. (OBRIGATÓRIO)
+          maxLength: 2
+
+        alterar_senha:
+          type: string
+          additionalProperties:
+            type: boolean
+          description: Se o administrador clicou em solicitar senha. (OBRIGATÓRIO)
+          maxLength: 1
+          enum:
+            - "N"
+            - "S"
+            - true
+            - false
+
+      required:
+        - id_distribuidor
+        - id perfil
+        - id cargo 
+        - email
+        - senha
+        - nome_completo
+        - cpf
+        - telefone
+        - cep
+        - endereco
+        - endereco_num
+        - bairro
+        - cidade
+        - estado
+        - solicitar_senha
+
+
+      example:
+
+        email: "email@servidor.com"
+        senha: "meidi291923jduasj83d8qs8da932kd2"
+        nome_completo: "Pedro alvares cabral"
+        cpf: "99999999999"
+        id_perfil: 1 
+        id_cargo: 1 
+        id_distribuidor: 1
+        telefone: "85999999999"
+        cep: 99999999
+        endereco: "Rua XIII de maio"
+        endereco_num: 500
+        complemento: "Perto do IFCE"
+        bairro: "Parangaba"
+        cidade: "Fortaleza"
+        estado: "CE"
+        solicitar_senha: "S"
+
+    # Response Body padrão
+    Body-request-put:
+      type: object
+      properties:
+
+        id_usuario:
+          type: integer
+          description: Identificação do usuário do jmanager (Caso não informado será utilizado o do token). (OPCIONAL)
+
+        nome_completo:
+          type: string
+          description: Nome completo o usuário. Minimo de duas palavras (OPCIONAL)
+          maxLength: 500
+          pattern: ^[A-ZÀ-Ÿ][A-zÀ-ÿ']+\s([A-zÀ-ÿ']\s?)*[A-ZÀ-Ÿ][A-zÀ-ÿ']+$
+
+        cpf:
+          type: string
+          description: CPF do usuário. String numérica inteira. (OPCIONAL)
+          maxLength: 11
+
+        id_perfil:
+          type: integer
+          description: Identificação do perfil do jmanager. (OPCIONAL)
+
+        id_cargo:
+          type: number
+          description: Identificação do cargo do jmanager. (OPCIONAL)
+
+        telefone:
+          type: string
+          description: Se o usuario clicou em manter-logado. (OPCIONAL)
+          maxLength: 20
+
+        cep:
+          type: integer
+          description: CEP do usuário. (OPCIONAL)
+
+        endereco:
+          type: string
+          description: Endereço do usuário sem número. (OPCIONAL)
+          maxLength: 100
+
+        endereco_num:
+          type: integer
+          description: Número do endereço do usuário. (OPCIONAL)
+
+        complemento:
+          type: string
+          description: Complemento o endereço do usuário. (OPCIONAL)
+          maxLength: 100
+
+        bairro:
+          type: string
+          description: Bairro do endereço do usuário. (OPCIONAL)
+          maxLength: 500
+
+        cidade:
+          type: string
+          description: Cidade do usuário. (OPCIONAL)
+          maxLength: 100
+
+        estado:
+          type: string
+          description: Estado do usuário. (OPCIONAL)
+          maxLength: 2
+
+        status:
+          type: string
+          additionalProperties:
+            type: boolean
+          description: Alteração de status do usuario. (OPCIONAL)
+          maxLength: 1
+          enum:
+            - "N"
+            - "S"
+            - true
+            - false
+
+        alterar_senha:
+          type: string
+          additionalProperties:
+            type: boolean
+          description: Se o administrador clicou em solicitar senha. (OPCIONAL)
+          maxLength: 1
+          enum:
+            - "N"
+            - "S"
+            - true
+            - false
+
+      required:
+        - id_usuario
+
+      example:
+
+        id_usuario: 1
+        nome_completo: jose helmo
+        cpf: 99999999999
+        id_perfil: 1 
+        id_cargo: 1 
+        telefone: "85999999999"
+        cep: 99999999
+        endereco: "Rua XIII de maio"
+        endereco_num: 500
+        complemento: "Perto do IFCE"
+        bairro: "Parangaba"
+        cidade: "Fortaleza"
+        estado: "CE"
+        status: "S"
+        solicitar_senha: "S"
+
+    # Resposta para Tudo ok
+    Resposta_Tudo-ok:
+      type: object
+      description: "Caso a request ocorra sem nenhum problema."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 1
+          descricao: "Mensagem especifica para a situação."
+
+    # Resposta para Houveram erros
+    Resposta_Houveram-erros:
+      type: object
+      description: "Caso a request ocorra e algum problema ocorra."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+
+          situacao:
+            type: object
+            description: "Holder das infomrações dos atributos do erro"
+            properties:
+
+              sucessos:
+                type: integer
+                description: quantidade de sucessos que houveram durante a transação
+
+              falhas:
+                type: integer
+                description: quantidade de falhas que houveram durante a transação
+
+              descricao: 
+                type: array
+                description: Holder dos objetos de falhas
+                items:
+
+                  type: object
+                  description: Holder dos objetos contendos os agentes responsáveis pelo erro e uma descrição do erro
+                  properties:
+
+                      motivo:
+                        type: string
+                        description: Descrição especifica do erro
+                      
+                      combinação:
+                        type: object
+                        description: Holder dos agentes causadores do erro
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 15
+          descricao: "Token de sessão enviado."
+        situacao:
+          sucessos: 0
+          falhas: 1
+          descricao: 
+            - motivo: 'Motivo especifico para o erro.'
+              combinacao: 
+                chaves: Chaves unicas para descobrir qual o erro
+
+    # Resposta para Token válido
+    Resposta_Token-valido:
+      type: object
+      description: Caso o token seja enviado na request, ele será validado e, caso esteja válido, será devolvido.
+      
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+        token:
+          type: string
+          description: Token de login do usuário
+
+        nome: 
+          type: string
+          description: Primeiro nome do usuário
+
+        id_usuario:
+          type: integer
+          description: id do usuario que logou
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 1
+          descricao: "Token de sessão reenviado."
+        token: "token do usuario para uso normal"
+        nome: "Primeiro nome do usuário"
+        id_usuario: "numero do id do usuário"
+
+    # Resposta para Dados não alterados
+    Resposta_Dados-não-alterados:
+      type: object
+      description: "Caso a request de alteração seja requerida mas nada seja alterado devido a dados invalidos"
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 16
+          descricao: "Não houveram modificações na transação."
+
+
+    # Resposta para Permissão insuficiente
+    Resposta_Permissao-insuficiente:
+      type: object
+      description: Caso o token seja enviado na request, ele seja validado mas o usuário não tenha permissão suficiente para realizar ação desejada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 403
+        resposta: 
+          tipo: 12
+          descricao: "Usuário sem permissão para realizar ação"
+
+    # Resposta para ação especifica negada
+    Resposta_Acao-especifica-negada:
+      type: object
+      description: Caso o token seja enviado na request, ele seja validado, tenha permissão de realizar ação, mas tente fazer-lo por outro alguem.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 403
+        resposta: 
+          tipo: 13
+          descricao: "Ação recusada: Produto de distribuidor diferente dos permitido."
+
+    # Resposta para ação especifica negada por erro
+    Resposta_Acao-especifica-negada-erro:
+      type: object
+      description: Caso o token seja enviado na request, ele seja validado, tenha permissão de realizar ação, mas tente fazer algo que não pode acontecer.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 13
+          descricao: "Ação recusada: Mensagem especifica."
+
+    # Resposta para Token inválido
+    Resposta_Token-invalido:
+      type: object
+      description: Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 11
+          descricao: "Token inválido."
+
+    # Resposta para Token inválido
+    Resposta_Token-nao-enviado:
+      type: object
+      description: Caso o token não seja enviado na request.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 13
+          descricao: "Ação recusada: Token não enviado."
+
+    # Resposta para Dados não existentes
+    Resposta_Dados-não-existentes:
+      type: object
+      description: "Caso a request ocorra mas não existam dado para serem encontrados"
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+
+          token:
+            type: string
+            description: Token de login do usuário
+
+          nome: 
+            type: string
+            description: Primeiro nome do usuário
+
+          id_usuario:
+            type: integer
+            description: id do usuario que logou
+      
+      example:
+
+        status: 404
+        resposta: 
+          tipo: 7
+          descricao: "Sem dados para retornar."
+
+    # Resposta para Dados não encontrados
+    Resposta_Dados-não-encontrados:
+      type: object
+      description: "Caso a request ocorra mas não sejam encontrados os dados pedidos"
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 6
+          descricao: "Dados não encontrados para estes filtros."
+
+    # Resposta para Dados inválidos
+    Resposta_Dados-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 2
+          descricao: "Lista com as chaves que são inválidas"
+
+    # Resposta para Dados faltantes
+    Resposta_Dados-faltantes:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria não seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 3
+          descricao: "Lista com as chaves que estão faltando"
+
+    # Resposta para Valores inválidos
+    Resposta_Valores-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos).
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 4
+          descricao: "Lista com as chaves que possuem valores do tipo incorretos"
+
+    # Resposta para Valores nulos
+    Resposta_Valores-nulos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 400
+        resposta: 
+          tipo: 14
+          descricao: "Lista com as chaves que possuem valores nulos"
+    
+    # Resposta para Registro não-existente
+    Resposta_Registro-nao-existente:
+      type: object
+      description: mensagem especifica para a situação.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 409
+        resposta: 
+          tipo: 5
+          descricao: "Mensagem especifica"
+
+    # Resposta para Registro já-existente
+    Resposta_Registro-ja-existente:
+      type: object
+      description: mensagem especifica para a situação.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 409
+        resposta: 
+          tipo: 5
+          descricao: "Mensagem especifica"

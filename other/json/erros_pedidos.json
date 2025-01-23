@@ -1,0 +1,28 @@
+{
+    "boleto": [
+        {"id_motivo": 1, "motivo": "CNPJ Inativo na receita"},
+        {"id_motivo": 2, "motivo": "Cliente não atrelado ao distribuidor do orçamento."},
+        {"id_motivo": 3, "motivo": "Cliente não atingiu limite minimo de compra."},
+        {"id_motivo": 4, "motivo": "Cliente sem saldo suficiente para realizar a compra."},
+        {"id_motivo": 5, "motivo": "Distribuidor negou registro do pedido."},
+        {"id_motivo": 15, "motivo": "Cupom invalido por: (mensagem especifica)"}
+    ],
+    "cartao": [
+        {"id_motivo": 1, "motivo": "CNPJ Inativo na receita"},
+        {"id_motivo": 2, "motivo": "Cliente não atrelado ao distribuidor do orçamento."},
+        {"id_motivo": 3, "motivo": "Cliente não atingiu limite minimo de compra."},
+        {"id_motivo": 5, "motivo": "Distribuidor negou registro do pedido."},
+        {"id_motivo": 6, "motivo": "CVV não informado."},
+        {"id_motivo": 7, "motivo": "Erro de comunicação com o servidor de cartão."},
+        {"id_motivo": 8, "motivo": "Transação negada. Saldo infuficiente no cartão de crédito."},
+        {"id_motivo": 9, "motivo": "Transação negada. Contate sua operadora de cartão de crédito."},
+        {"id_motivo": 10, "motivo": "Número do cartão de crédito inválido. Por favor, verifique se os dados estão corretos."},
+        {"id_motivo": 11, "motivo": "Cartão de crédito expirado. Por favor, verifique se os dados estão corretos."},
+        {"id_motivo": 12, "motivo": "Cartão de crédito com data inválida. Por favor, verifique se os dados estão corretos."},
+        {"id_motivo": 13, "motivo": "CVV com digitos inválidos. Por favor, verifique se os dados estão corretos."},
+        {"id_motivo": 14, "motivo": "Erro genérico na maxipago (erro 1024)"},
+        {"id_motivo": 15, "motivo": "Cupom invalido por: (mensagem especifica)"},
+        {"id_motivo": 16, "motivo": "Cartão utilizado não possui bandeira. Por favor recadastre-o com as informações corretas."},
+        {"id_motivo": 17, "motivo": "Falha no id_maxipago. Entre em contato com o suporte."}
+    ]
+}

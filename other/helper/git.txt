@@ -1,0 +1,23 @@
+git add .
+    Adiciona todos os arquivos para o commit
+
+git add [arquivo qualquer]
+    Adiciona um arquivo especifico para o commit
+
+git commit -m "comentario sobre o commit"
+    Comita os dados adicionados no historico local da maquina com o comentario adicionado
+
+git push <remote> <branch>
+    Salva os commits no repositorio
+
+git push -u <remote> <branch>
+    Cria a branch e salva os commits no repositorio 
+
+git push <remote> <old_branch>:<new_branch>
+    Salva os commits de um repositorio em outro
+
+git pull <remote> <branch>
+    Puxa os commits para o repositorio local da maquina
+
+git pull -f <remote> <branch>
+    Força o puxar dos commits para o repositorio local da maquina

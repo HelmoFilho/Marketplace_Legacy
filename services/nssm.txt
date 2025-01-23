@@ -1,0 +1,21 @@
+services\nssm install <nome do servico>
+    Cria um novo serviço
+
+services\nssm edit <nome do servico>
+    Edita as configurações de um serviço
+
+services\nssm remove <nome do servico>
+    Desinstala um serviço
+
+services\nssm start <nome do servico>
+    Inicia um serviço
+
+services\nssm stop <nome do servico>
+    Para um serviço
+
+services\nssm restart <nome do servico>
+    Reinicia um serviço
+
+t1 = caminho até o python.exe no environment (absoluto)
+t2 = caminho a pasta principal do projeto (absoluto)
+t3 = caminho até o main.py (relativo)

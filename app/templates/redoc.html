@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  	<head>
+		
+		{% set title = (filename.split("/")[-1]).split(".")[0] %}
+
+  	  	<title>{{ title.upper() }}</title>
+  	  	<!-- needed for adaptive design -->
+  	  	<meta charset="utf-8"/>
+  	  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	  	<link rel="stylesheet" href="{{	url_for('static', filename='css/redoc.css') }}">
+
+  	  	<!--
+  	  	Redoc doesn't change outer page styles
+  	  	-->
+  	  	<style>
+  	  	  body {
+  	  	    margin: 0;
+  	  	    padding: 0;
+  	  	  }
+  	  	</style>
+
+  	</head>
+
+  	<body>
+
+  	  	<redoc spec-url="{{	url_for('static', filename= filename ) }}"></redoc>
+  	  	<script src="{{	url_for('static', filename='js/redoc_standalone.js') }}"> </script>
+
+  	</body>
+</html>

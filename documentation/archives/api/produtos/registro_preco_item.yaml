@@ -1,0 +1,623 @@
+openapi: 3.0.0
+
+info:
+  title: "API do projeto B2B"
+  description: "Documentação da API do projeto B2B 2.0."
+  version: 0.2.0
+
+servers:
+  - url: 'https://wsmarketplace-dev.guarany.com.br/api/v1'
+    description: Development server
+
+  - url: 'https://mktplace-hub.guarany.com.br/api/v1'
+    description: Production server
+
+tags:
+  - name: "API de cadastro das tabelas de preço"
+    description: "Criação/Atualização de uma tabela de preço de produto"
+
+paths:
+  
+  /api-registro/produtos/tabela-preco:
+  
+    post:
+      tags:
+        - "API de cadastro das tabelas de preço"
+      summary: Registra/Atualiza a tabela de preço
+
+      description: >
+                      Aqui serão enviados as tabelas de preço que serão utilizadas no marketplace.
+                      Assim que o processo de criação/atualização das tabelas for feito, elas serão automaticamente
+                      exportadas para o marketplace e serão aplicadas para os produtos já aprovados.
+
+      security:
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Body Request"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request'
+            examples:
+              Registro da tabela de produto:  # <--- Nome do Exemplo dado
+                summary: Registro da tabela de produto
+                value:
+                  # vv Payload do exemplo vv
+                  tabela_preco:
+                  - id_distribuidor: 0
+                    cod_tabela: xxxx
+                    descri_tabela: "Tabela Teste"
+                    tabela_padrao: "N"
+                    status: "A"
+                    dt_inicio: AAAA-MM-DD
+                    dt_fim: AAAA-MM-DD
+                    tabela_preco_item: 
+                      - agrupamento_variante: xxxxx
+                        cod_prod_distr: xxxxxyy
+                        cod_frag_distr: yy
+                        status: 'A'
+                        preco_tabela: 10.9000         
+ 
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+                  - $ref: '#/components/schemas/Resposta_Houveram-erros'
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+                  
+                  
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Dados enviados para a administração para análise."
+
+                Resposta_Houveram-erros:
+                  summary: "Resposta: houveram erros"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra e algum problema ocorra."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 15
+                        descricao: "Ocorreram erros na transação."
+                      situacao:
+                        sucessos: 0
+                        falhas: 1
+                        descricao: 
+                          - motivo: 'Motivo especifico para o erro.'
+                            combinacao: 
+                              chaves: Chaves unicas para descobrir qual o erro
+
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas"
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando"
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos"
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+components:
+
+  # Esquemas envolvendo autenticação/autorização
+  securitySchemes:
+
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: token
+      description: >
+                    - O envio do token é OBRIGATÓRIO. 
+
+                    - O envio deve ser realizado no header da request.
+
+                    - Neste Endpoint, o token utilizado será considerado inválido caso algum dos critérios abaixo seja atendido:
+                        - Token com estrutura inválida (3 elementos separados por 2 pontos)
+                        - Token não criado pelo servidor (Erro no decode)
+      
+  schemas:
+
+    # Response Body padrão
+    Body-request:
+      type: object
+      properties:
+
+        tabela_preco:
+          type: array
+          description: Holder das tabelas de preço a serem cadastradas/atualizadas
+          items:
+
+            type: object
+            properties:
+        
+              id_distribuidor: 
+                type: integer
+                description: ID da distribuidora
+                minimum: 1
+
+              cod_tabela: 
+                type: string
+                description: Codigo interno da tabela
+                maxLength: 20
+
+              descr_reduzida_distr: 
+                type: string
+                description: Descrição resumida da tabela
+                maxLength: 200
+
+              status: 
+                type: string
+                description: Status da tabela de preço
+                maxLength: 1
+                enum:
+                  - A
+                  - I
+
+              tabela_padrao: 
+                type: string
+                description: Define se a tabela é a olhada na situação nomal de consulta de preço
+                maxLength: 1
+                enum:
+                  - S
+                  - N
+
+              data_inicio: 
+                type: string
+                format: date
+                description: Data que a tabela passa a valer
+                example: "2000-01-01"
+                pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}"
+
+              data_fim: 
+                type: string
+                format: date
+                description: Data que a tabela deixa de valer
+                example: "2000-01-01"
+                pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}"
+
+              tabela_preco_item:
+                type: array
+                description: Holder dos preços dos produtos
+                items:
+
+                  type: object
+                  properties:
+
+                    agrupamento_variante: 
+                      type: string
+                      description: Codigo do agrupamento
+                      maxLength: 20
+
+                    cod_prod_distr: 
+                      type: string
+                      description: Codigo do produto da distribuidora
+                      maxLength: 20
+
+                    cod_frag_distr: 
+                      type: string
+                      description: Codigo da fragância do agrupamento
+                      maxLength: 20
+
+                    preco_tabela: 
+                      type: number
+                      description: Preço especifico do produto
+                      maxLength: 20
+
+                    status: 
+                      type: string
+                      description: Status do preço do produto
+                      maxLength: 1
+                      enum:
+                        - A
+                        - I
+
+                  required:
+                    - agrupamento_variante
+                    - cod_prod_distr
+                    - cod_frag_distr
+                    - preco_tabela
+                    - status
+
+            required:
+              - tabela_preco
+              - id_distribuidor
+              - cod_tabela
+              - descr_reduzida_distr
+              - tabela_padrao
+              - status
+              - dt_inicio
+              - dt_fim
+              - tabela_preco_item 
+
+      required:
+        - tabela_preco
+
+      example:
+
+        tabela_preco:
+          - id_distribuidor: 0
+            cod_tabela: xxxx
+            descri_tabela: "Tabela Teste"
+            tabela_padrao: "N"
+            status: "A"
+            dt_inicio: Ano-mes-dia
+            dt_fim: Ano-mes-dia
+            tabela_preco_item: 
+              - agrupamento_variante: xxxxx
+                cod_prod_distr: xxxxxyy
+                cod_frag_distr: yy
+                status: 'A'
+                preco_tabela: 10.9000
+ 
+    # Resposta para Tudo ok
+    Resposta_Tudo-ok:
+      type: object
+      description: "Caso a request ocorra sem nenhum problema."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 1
+          descricao: "Dados enviados para a administração para análise."
+
+    # Resposta para Houveram erros
+    Resposta_Houveram-erros:
+      type: object
+      description: "Caso a request ocorra e algum problema ocorra."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+
+          situacao:
+            type: object
+            description: "Holder das informações dos atributos do erro"
+            properties:
+
+              sucessos:
+                type: integer
+                description: quantidade de sucessos que houveram durante a transação
+
+              falhas:
+                type: integer
+                description: quantidade de falhas que houveram durante a transação
+
+              descricao: 
+                type: array
+                description: Holder dos objetos de falhas
+                items:
+
+                  type: object
+                  description: Holder dos objetos contendos os agentes responsáveis pelo erro e uma descrição do erro
+                  properties:
+
+                      motivo:
+                        type: string
+                        description: Descrição especifica do erro
+                      
+                      combinação:
+                        type: object
+                        description: Holder dos agentes causadores do erro
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 15
+          descricao: "Ocorreram erros na transação."
+        situacao:
+          sucessos: 0
+          falhas: 1
+          descricao: 
+            - motivo: 'Motivo especifico para o erro.'
+              combinacao: 
+                chaves: Chaves unicas para descobrir qual o erro
+
+    # Resposta para Dados inválidos
+    Resposta_Dados-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 2
+          descricao: "Lista com as chaves que são inválidas"
+
+    # Resposta para Dados faltantes
+    Resposta_Dados-faltantes:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria não seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 3
+          descricao: "Lista com as chaves que estão faltando"
+
+    # Resposta para Valores inválidos
+    Resposta_Valores-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos).
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 4
+          descricao: "Lista com as chaves que possuem valores do tipo incorretos"
+
+    # Resposta para Valores nulos
+    Resposta_Valores-nulos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 14
+          descricao: "Lista com as chaves que possuem valores nulos"
+    
+    # Resposta para Token inválido
+    Resposta_Token-invalido:
+      type: object
+      description: Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 11
+          descricao: "Token inválido."
+
+    # Resposta para Token inválido
+    Resposta_Token-nao-enviado:
+      type: object
+      description: Caso o token não seja enviado na request.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 13
+          descricao: "Ação recusada: Token não enviado."

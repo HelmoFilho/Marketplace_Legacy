@@ -1,0 +1,732 @@
+openapi: 3.0.0
+
+info:
+  title: "API do projeto B2B"
+  description: "Documentação da API do projeto B2B 2.0."
+  version: 0.2.0
+
+servers:
+  - url: 'https://wsmarketplace-dev.guarany.com.br/api/v1'
+    description: Development server
+
+  - url: 'https://mktplace-hub.guarany.com.br/api/v1'
+    description: Production server
+
+tags:
+  - name: "API de cadastro de produto"
+    description: "Criação/Atualização de um registro de produto para aprovação"
+
+paths:
+  
+  /api-registro/produtos:
+  
+    post:
+      tags:
+        - "API de cadastro de produto"
+      summary: Registra/Atualiza um produto para o distribuidor
+
+      description: >
+                      Esse endpoint funciona como ponto inicial para as aplicações do jsmanager e unomarket.
+                      Aqui serão enviados os produtos que serão mostrados nas aplicações e somente alguns dados são atualizados como:
+
+                        - Giro
+                        - Ranking
+
+                      O resto será utilizado para o cadastro do produto se o mesmo já não existir. 
+                      Demais informações serão modificavéis somente após a aprovação do produto pela distribuidora.
+
+      security:
+        - ApiKeyAuth: []
+
+      requestBody:
+        description: "Body Request"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body-request'
+            examples:
+              Registro do produto:  # <--- Nome do Exemplo dado
+                summary: Registro do produto correto
+                value:
+                  # vv Payload do exemplo vv
+                  produtos:
+                  - id_distribuidor: 0
+                    agrupamento_variante,: "99999"
+                    descr_reduzida_distr,: "DESCRIÇÃO REDUZIDA"
+                    descr_completa_distr: "DESCRIÇÃO COMPLETA"
+                    cod_prod_distr: "9999999"
+                    cod_frag_distr: "99"
+                    sku: "123456789"
+                    dun14: "1789101054446"
+                    status: "A"
+                    tipo_produto: "ALIS HENE HENNA GEL 180G"
+                    cod_marca: xxxx
+                    descr_marca: "Marca qualquer"
+                    cod_grupo: xxxx
+                    descr_grupo: "Grupo qualquer"
+                    cod_subgrupo: xxxx
+                    descr_subgrupo: "Subgrupo qualquer"
+                    variante: "JABORANDI"
+                    multiplo_venda: 3
+                    unidade_venda: cm
+                    quant_unid_venda: 1
+                    unidade_embalagem: cx
+                    quantidade_embalagem: 12
+                    ranking: 12345789
+                    giro: E
+                    agrup_familia: "456872"
+                    volumetria: "130G"
+                    cod_fornecedor: xxxx
+                    descri_fornecedor: "Fornecedor qualquer"
+                    url_imagem: "fakepath.com"
+                  
+      responses:
+        '200':
+          description: "Sucesso na operação"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Tudo-ok'
+                  - $ref: '#/components/schemas/Resposta_Houveram-erros'
+                  - $ref: '#/components/schemas/Resposta_Dados-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Dados-faltantes'
+                  - $ref: '#/components/schemas/Resposta_Valores-invalidos'
+                  - $ref: '#/components/schemas/Resposta_Valores-nulos'
+                  
+                  
+              examples:
+                
+                Resposta_Tudo-ok:
+                  summary: "Resposta: tudo ok"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra sem nenhum problema."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 1
+                        descricao: "Dados enviados para a administração para análise."
+
+                Resposta_Houveram-erros:
+                  summary: "Resposta: houveram erros"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso a request ocorra e algum problema ocorra."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 15
+                        descricao: "Ocorreram erros na transação."
+                      situacao:
+                        sucessos: 0
+                        falhas: 1
+                        descricao: 
+                          - motivo: 'Motivo especifico para o erro.'
+                            combinacao: 
+                              chaves: Chaves unicas para descobrir qual o erro
+
+                Resposta_Dados-invalidos:
+                  summary: "Resposta: dados inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 2
+                        descricao: "Lista com as chaves que são inválidas"
+
+                Resposta_Dados-faltantes:
+                  summary: "Resposta: dados faltantes"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria não seja enviada."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 3
+                        descricao: "Lista com as chaves que estão faltando"
+
+                Resposta_Valores-invalidos:
+                  summary: "Resposta: valores inválidos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 4
+                        descricao: "Lista com as chaves que possuem valores do tipo incorretos"
+
+                Resposta_Valores-nulos:
+                  summary: "Resposta: valores nulos"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo."
+                    Saida-Real:
+                      status: 200
+                      resposta: 
+                        tipo: 14
+                        descricao: "Lista com as chaves que possuem valores nulos"
+
+        '401':
+          description: "Usuário não-autenticado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Resposta_Token-invalido'
+                  - $ref: '#/components/schemas/Resposta_Token-nao-enviado'
+
+              examples:
+                
+                Resposta_Token-invalido:
+                  summary: "Resposta: Token inválido"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 11
+                        descricao: "Token inválido."
+
+                Resposta_Token-nao-enviado:
+                  summary: "Resposta: Token não-enviado"
+                  value:
+                    # vv Payload do exemplo vv
+                    Descricao-detalhada:
+                      descricao: "Caso o token não seja enviado na request."
+                    Saida-Real:
+                      status: 401
+                      resposta: 
+                        tipo: 13
+                        descricao: "Ação recusada: Token não enviado."
+
+components:
+
+  # Esquemas envolvendo autenticação/autorização
+  securitySchemes:
+
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: token
+      description: >
+                    - O envio do token é OBRIGATÓRIO. 
+
+                    - O envio deve ser realizado no header da request.
+
+                    - Neste Endpoint, o token utilizado será considerado inválido caso algum dos critérios abaixo seja atendido:
+                        - Token com estrutura inválida (3 elementos separados por 2 pontos)
+                        - Token não criado pelo servidor (Erro no decode)
+      
+  schemas:
+
+    # Response Body padrão
+    Body-request:
+      type: object
+      properties:
+
+        produtos:
+          type: array
+          description: Holder dos produtos a serem cadastrados/atualizados
+          items:
+
+            type: object
+
+            required:
+                - id_distribuidor
+                - agrupamento_variante
+                - descr_reduzida_distr
+                - descr_completa_distr
+                - cod_prod_distr
+                - cod_frag_distr
+                - sku
+                - status
+                - tipo_produto
+                - cod_marca
+                - descr_marca
+                - cod_grupo
+                - descr_grupo
+                - cod_subgrupo
+                - descr_subgrupo
+                - variante
+                - multiplo_venda
+                - unidade_venda
+                - quant_unid_venda
+                - unidade_embalagem
+                - quantidade_embalagem
+                - ranking
+                - giro
+                - cod_fornecedor
+                - descri_fornecedor
+
+            properties:
+        
+              id_distribuidor: 
+                type: integer
+                minimum: 1
+                description: ID do distribuidor pai do produto.
+
+              agrupamento_variante: 
+                type: string
+                description: Codigo do agrupamento
+                maxLength: 20
+
+              descr_reduzida_distr: 
+                type: string
+                description: Descrição reduzida do distribuidor
+                maxLength: 1000
+
+              descr_completa_distr: 
+                type: string
+                description: Descrição completa do distribuidor
+
+              cod_prod_distr: 
+                type: string
+                description: Codigo do produto da distribuidora
+                maxLength: 20
+
+              cod_frag_distr: 
+                type: string
+                description: Codigo da fragância do agrupamento
+                maxLength: 20
+
+              sku: 
+                type: string
+                description: sku da fragância
+                maxLength: 20
+
+              dun14: 
+                type: string
+                description: Código de barras de 14 dígitos
+                maxLength: 20
+
+              status: 
+                type: string
+                description: Status do envio do produto
+                maxLength: 1
+                enum:
+                  - 'A'
+                  - 'I'
+
+              tipo_produto: 
+                type: string
+                description: Tipo do produto
+                maxLength: 1000
+
+              cod_marca: 
+                type: string
+                description: Código interno da marca
+                maxLength: 20
+
+              descr_marca: 
+                type: string
+                description: Descrição da marca
+                maxLength: 200
+
+              cod_grupo: 
+                type: string
+                description: Código do grupo inicial do produto
+                maxLength: 20
+
+              descr_grupo: 
+                type: string
+                description: Descrição do grupo inicial
+                maxLength: 200
+
+              cod_subgrupo: 
+                type: string
+                description: Código do subgrupo inicial do produto
+                maxLength: 20
+
+              descr_subgrupo: 
+                type: string
+                description: Descrição do subgrupo inicial
+                maxLength: 200
+
+              variante: 
+                type: string
+                description: Descrição da variante
+                maxLength: 200
+
+              multiplo_venda: 
+                type: integer
+                description: MUltiplo de venda
+
+              unidade_venda: 
+                type: string
+                description: Unidade de venda
+                maxLength: 20
+
+              quant_unid_venda: 
+                type: integer
+                description: Quantidade da unidade de venda
+
+              unidade_embalagem: 
+                type: string
+                description: Unidade da embalagem
+                maxLength: 20
+
+              quantidade_embalagem: 
+                type: integer
+                description: Quantidade de produto por embalagem
+
+              ranking: 
+                type: integer
+                description: Ranking do produto
+
+              giro: 
+                type: string
+                description: Rotatividade do produto
+                maxLength: 20
+
+              agrup_familia: 
+                type: string
+                description: Codigo de agrupamento da familia
+                maxLength: 20
+
+              volumetria: 
+                type: string
+                description: Volume do produto
+                maxLength: 20
+
+              cod_fornecedor: 
+                type: string
+                description: Codigo interno do fornecedor
+                maxLength: 20
+
+              descri_fornecedor: 
+                type: string
+                description: Descrição do fornecedor
+                maxLength: 200
+
+              url_imagem: 
+                type: string
+                description: Imagens iniciais do produto
+                maxLength: 1000
+
+      required:
+        - produtos
+
+      example:
+
+        produtos:
+          - id_distribuidor: 0
+            agrupamento_variante,: "99999"
+            descr_reduzida_distr,: "DESCRIÇÃO REDUZIDA"
+            descr_completa_distr: "DESCRIÇÃO COMPLETA"
+            cod_prod_distr: "9999999"
+            cod_frag_distr: "99"
+            sku: "123456789"
+            dun14: "1789101054446"
+            status: "A"
+            tipo_produto: "ALIS HENE HENNA GEL 180G"
+            cod_marca: xxxx
+            descr_marca: "Marca qualquer"
+            cod_grupo: xxxx
+            descr_grupo: "Grupo qualquer"
+            cod_subgrupo: xxxx
+            descr_subgrupo: "Subgrupo qualquer"
+            variante: "JABORANDI"
+            multiplo_venda: 3
+            unidade_venda: cm
+            quant_unid_venda: 1
+            unidade_embalagem: cx
+            quantidade_embalagem: 12
+            ranking: 12345789
+            giro: E
+            agrup_familia: "456872"
+            volumetria: "130G"
+            cod_fornecedor: xxxx
+            descri_fornecedor: "Fornecedor qualquer"
+            url_imagem: "fakepath.com"
+ 
+    # Resposta para Tudo ok
+    Resposta_Tudo-ok:
+      type: object
+      description: "Caso a request ocorra sem nenhum problema."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 1
+          descricao: "Dados enviados para a administração para análise."
+
+    # Resposta para Houveram erros
+    Resposta_Houveram-erros:
+      type: object
+      description: "Caso a request ocorra e algum problema ocorra."
+
+      properties:
+        
+          status:
+            type: integer
+            description: "Codigo HTTP da resposta enviada"
+          
+          resposta: 
+            type: object
+            description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+            properties:
+          
+              tipo: 
+                type: string
+                description: "Tipo da resposta apresentada"
+          
+              descricao:
+                type: string
+                description: "Mensagem descrevendo a situação da resposta"
+
+          situacao:
+            type: object
+            description: "Holder das informações dos atributos do erro"
+            properties:
+
+              sucessos:
+                type: integer
+                description: quantidade de sucessos que houveram durante a transação
+
+              falhas:
+                type: integer
+                description: quantidade de falhas que houveram durante a transação
+
+              descricao: 
+                type: array
+                description: Holder dos objetos de falhas
+                items:
+
+                  type: object
+                  description: Holder dos objetos contendos os agentes responsáveis pelo erro e uma descrição do erro
+                  properties:
+
+                      motivo:
+                        type: string
+                        description: Descrição especifica do erro
+                      
+                      combinação:
+                        type: object
+                        description: Holder dos agentes causadores do erro
+      
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 15
+          descricao: "Ocorreram erros na transação."
+        situacao:
+          sucessos: 0
+          falhas: 1
+          descricao: 
+            - motivo: 'Motivo especifico para o erro.'
+              combinacao: 
+                chaves: Chaves unicas para descobrir qual o erro
+
+    # Resposta para Dados inválidos
+    Resposta_Dados-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma informação inválida (tag não-esperada) seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 2
+          descricao: "Lista com as chaves que são inválidas"
+
+    # Resposta para Dados faltantes
+    Resposta_Dados-faltantes:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria não seja enviada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 3
+          descricao: "Lista com as chaves que estão faltando"
+
+    # Resposta para Valores inválidos
+    Resposta_Valores-invalidos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor do tipo diferente do esperado (string serve para todos).
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 4
+          descricao: "Lista com as chaves que possuem valores do tipo incorretos"
+
+    # Resposta para Valores nulos
+    Resposta_Valores-nulos:
+      type: object
+      description: Para caso a request seja feita e alguma tag obrigatoria esteja com valor nulo.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 200
+        resposta: 
+          tipo: 14
+          descricao: "Lista com as chaves que possuem valores nulos"
+    
+    # Resposta para Token inválido
+    Resposta_Token-invalido:
+      type: object
+      description: Caso o token seja enviado na request, ele será validado e, caso esteja inválido, será apagado e a sessão de login será encerrada.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 11
+          descricao: "Token inválido."
+
+    # Resposta para Token inválido
+    Resposta_Token-nao-enviado:
+      type: object
+      description: Caso o token não seja enviado na request.
+      properties:
+        
+        status:
+          type: integer
+          description: "Codigo HTTP da resposta enviada"
+        
+        resposta: 
+          type: object
+          description: "Utilizado para informar o tipo da resposta e uma descrição da mesma"
+          properties:
+        
+            tipo: 
+              type: string
+              description: "Tipo da resposta apresentada"
+        
+            descricao:
+              type: string
+              description: "Mensagem descrevendo a situação da resposta"
+
+      example:
+
+        status: 401
+        resposta: 
+          tipo: 13
+          descricao: "Ação recusada: Token não enviado."

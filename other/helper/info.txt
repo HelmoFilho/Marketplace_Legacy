@@ -1,0 +1,32 @@
+Set-ExecutionPolicy Unrestricted -Scope Process
+    Permite execução de arquivos pelo powershell
+
+environment/scripts/activate
+    Ativa o virtualenv
+
+python -m virtualenv environment
+    Cria o virtualenv "enviroment"
+
+python -m pip install -r other\requirements.txt
+    Instala todos os pacotes pip dentro deste txt
+
+pip uninstall -r requirements.txt -y
+    Deleta todos os pacotes pip dento do txt informado de uma vez só
+
+pip3 freeze > other\requirements.txt
+    Salva todos os pacotes atuais no arquivo txt 
+
+aglio -i entrada.apib -o saida.html
+    Cria um html de uma documentação API Blueprint
+
+redoc-cli bundle -o index.html a.json
+    Cria um html de uma documentação JSON SWAGGER
+
+ssh-keygen -t rsa -b 4096 -m PEM -f jwtRS256.key
+    Cria novas chaves privadas/publicas para o jwt
+
+datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+    Pega o tempo atual pelo python
+
+server = http://192.168.1.168:5753/
+normal = http://192.168.203.18:5753/

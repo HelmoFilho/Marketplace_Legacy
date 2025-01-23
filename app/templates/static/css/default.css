@@ -1,0 +1,82 @@
+/* Configurações abrangentes*/
+@font-face {
+    font-family: "BeauRivage";
+    src: url("..\\fonts\\Beau_Rivage\\BeauRivage-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Tangerine-Bold";
+    src: url("..\\fonts\\Tangerine\\Tangerine-Bold.ttf");
+}
+
+@font-face {
+    font-family: "Tangerine-Regular";
+    src: url("..\\fonts\\Tangerine\\Tangerine-Regular.ttf");
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #888888;
+}
+
+a {
+    text-decoration: none;
+    color: #7300e6;
+}
+
+/* Configuração do header */
+header {
+    background-color: white;
+    padding: 2rem 0rem 2rem 0rem;
+    height: 4rem;
+    width: 100%;
+    border-bottom: 0.7vh solid black;
+
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-image {
+    background-color: #FFFFFF;
+    height: 10vh;
+    margin: 0 0 0 3.5vw;
+    text-align: center;
+}
+
+.header-image img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+}
+
+.header-info {
+    color: black;
+    font-family: 'Times New Roman', Times, serif;
+    float: right;
+    font-size: 3vh;
+    padding: 0 3.5vw 0 0;
+    margin-left: 0.3vw;
+    text-align: right;
+}
+
+@media (max-width: 600px) {
+    .header-image {
+        font-size: 4vh;
+        padding: 0 0 0 4vw;
+    }
+
+    .header-info {
+        font-size: 2vh;
+        padding: 0 4vw 0 0;
+    }
+}
+
+@media (min-height: 1100px) {
+    header {
+        height: 10rem;
+    }
+}

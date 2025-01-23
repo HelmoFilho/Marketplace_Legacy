@@ -1,0 +1,169 @@
+@import url("default.css");
+
+@font-face {
+    font-family: "OpenSans";
+    src: url("..\\fonts\\OpenSans\\OpenSans-Bold.ttf");
+}
+
+/* Configuração do main */
+main {
+    background-color: #888888;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* border-left: 0.7vh solid white;
+    border-right: 0.7vh solid white; */
+}
+
+section{
+    background-color: white;
+
+    border: 0.3vh solid black;
+
+    margin: 5vh 0vw 0vh 0vw;
+    padding: 2vh 0vw 2vh 0vw; 
+
+    width: 90%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+@media screen and (max-width: 600px) {
+    section {
+        height: 65vh;
+    }
+}
+
+@media screen and (max-width: 300px) {
+    section {
+        height: 35vh;
+    }
+}
+
+/* Configurações da vertical line */
+.vertical-line {
+    background-color: #000000;
+    height: 60vh;
+    width: 1px;
+}
+
+/* Configuração dos explication blocks */
+.exp-block {
+    width: 60%;
+    height: 100%;
+
+    margin: 0vh 2.5vw 0vh 2.5vw;
+    padding: 0vh 0vw 0vh 0vw; 
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.exp-block h2 {
+    text-align: center;
+    font-size: 5vh;
+
+    /* font-family: 'Times New Roman', Times, serif; */
+    font-family: 'OpenSans';
+
+    margin: 0vh 4vw 0vh 4vw;
+    padding: 0vh 0vw 0vh 0vw; 
+}
+
+.exp-block p {
+    text-align: justify;
+    font-size: 3vh;
+
+    margin: 0vh 3vw 2vh 3vw;
+    padding: 0vh 0vw 0vh 0vw; 
+}
+
+.exp-block ul {
+    margin: 0vh 2vw 0vh 7vw;
+    padding: 0vh 0vw 0vh 0vw; 
+}
+
+.exp-block ul li { 
+    margin-bottom: 1vh;
+    font-size: 2.5vh;
+}
+
+@media (min-width: 600px) {
+    .exp-block {
+        justify-content: space-evenly;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .exp-block h2 {
+        font-size: 1.4rem;
+    }
+
+    .exp-block p {
+        font-size: 0.9rem;
+    }
+
+    .exp-block ul li { 
+        font-size: 0.8rem;
+    }
+}
+
+
+/* Configuração dos main blocks */
+.full-block {
+    width: 40%;
+    height: 100%;
+
+    margin: 0vh 2.5vw 0vh 2.5vw;
+    padding: 0vh 0vw 0vh 0vw; 
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.full-block button {
+    background-color: #444444;
+    
+    color: #ffffff;
+    text-align: center;
+
+    font-size: 2vh;
+    padding: 3vh 0vw 3vh 0vw;
+    border-radius: 5px;
+    width: 30%;
+    
+    cursor: pointer;
+}
+
+@media screen and (max-width: 1000px) {
+    .full-block button {
+        padding: 1vh 0vw 1vh 0vw;
+        width: 90%;
+        font-size: 2vh
+    }
+}
+
+@media screen and (max-width: 500px){
+    .full-block button {
+        font-size: 1vh
+    }
+}
+
+/* Configuração do full-section-separator */
+.full-section-separator {
+    width: 80%;
+    margin: 5vh 0vw 5vh 0vw; 
+}

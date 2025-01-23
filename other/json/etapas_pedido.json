@@ -1,0 +1,236 @@
+{
+    "1": {
+        "descricao": "boleto",
+        "etapas": {
+            "0": {
+                "descricao": "Registro",
+                "subetapas": {
+                    "1": "Realizando registro.",
+                    "2": "Registro realizado.",
+                    "3": "Enviado ao distribuidor.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "ainda está na fila de threads da registro.",
+                    "2": "enviado ao distribuidor e aguandando resposta OK ou NEGATIVA",
+                    "3": "resposta POSITIVA do distribuidor",
+                    "9": "adicionar motivo"
+                }
+            },
+            "1": {
+                "descricao": "Processamento",
+                "subetapas": {
+                    "1": "Gerando boleto.",
+                    "2": "Processando pagamento.",
+                    "3": "Pagamento confirmado.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "ainda está na fila de threads da processamento para envio financeiro",
+                    "2": "aguardando resposta do financeiro",
+                    "3": "ainda está na fila de threads da registro.",
+                    "9": "adicionar motivo"
+                }
+            },
+            "2": {
+                "descricao": "Separação",
+                "subetapas": {
+                    "1": "Aguardando separação.",
+                    "2": "Separando pedido.",
+                    "3": "Pedido separado.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "logística ainda não confirmou a separação do pedido, confirmação feita pelo distribuidor",
+                    "2": "nesse momento o distribuidor confirma que iniciou a separação",
+                    "3": "distribuidor confirmou a separação do pedido. OBS: NESSE MOMENTO CONSUMIR API DA MAXIPAGO COM O VALOR TOTAL DE PRODUTOS SEPARADOS CONFIRMADOS PELO DISTRIBUIDOR.",
+                    "9": "adicionar motivo"
+                }
+            },
+            "3": {
+                "descricao": "Faturamento",
+                "subetapas": {
+                    "1": "Aguardando faturamento.",
+                    "2": "Pedido faturado.",
+                    "3": "Em rota.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "pedido está no setor de faturamento do distribuidor aguardando liberação da nota",
+                    "2": "distribuidor confirmou faturamento e liberou a nota fiscal",
+                    "3": "distribuidor confirmou que o pedido foi carregado no caminhão.",
+                    "9": "adicionar motivo"
+                }
+            },
+            "4": {
+                "descricao": "Entregue",
+                "subetapas": {
+                    "1": "Aguardando entrega.",
+                    "3": "Produtos entregues.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "já enviado e aguardando confirmação de entreaga",
+                    "3": "API de entrega ou distribuidor confirmou entrega do produto.",
+                    "9": "adicionar motivo"
+                }
+            }
+        }
+    },
+    "2": {
+        "descricao": "cartao",
+        "etapas": {
+            "0": {
+                "descricao": "Registro",
+                "subetapas": {
+                    "1": "Realizando registro.",
+                    "2": "Registro realizado.",
+                    "3": "Enviado ao distribuidor.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "ainda está na fila de threads da registro.",
+                    "2": "enviado ao distribuidor e ao MaxiPago, e aguandando resposta até ambos darem OK ou NEGATIVA",
+                    "3": "resposta POSITIVA da autorização da MaxiPago e do distribuidor",
+                    "9": "adicionar motivo"
+                }
+            },
+            "1": {
+                "descricao": "Processamento",
+                "subetapas": {
+                    "1": "Aguardando processamento.",
+                    "2": "Processando pagamento.",
+                    "3": "Pagamento confirmado.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "ainda está na fila de threads da processamento do financeiro. Somente capturar apos receber confirmação do distribuidor para tal",
+                    "2": "aguardando resposta da MaxiPago",
+                    "3": "ainda está na fila de threads da registro.",
+                    "9": "adicionar motivo"
+                }
+            },
+            "2": {
+                "descricao": "Separação",
+                "subetapas": {
+                    "1": "Aguardando separação.",
+                    "2": "Separando pedido.",
+                    "3": "Pedido separado.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "logística ainda não confirmou a separação do pedido, confirmação feita pelo distribuidor",
+                    "2": "nesse momento o distribuidor confirma que iniciou a separação",
+                    "3": "distribuidor confirmou a separação do pedido. OBS: NESSE MOMENTO CONSUMIR API DA MAXIPAGO COM O VALOR TOTAL DE PRODUTOS SEPARADOS CONFIRMADOS PELO DISTRIBUIDOR.",
+                    "9": "adicionar motivo"
+                }
+            },
+            "3": {
+                "descricao": "Faturamento",
+                "subetapas": {
+                    "1": "Aguardando faturamento.",
+                    "2": "Pedido faturado.",
+                    "3": "Em rota.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "pedido está no setor de faturamento do distribuidor aguardando liberação da nota",
+                    "2": "distribuidor confirmou faturamento e liberou a nota fiscal",
+                    "3": "distribuidor confirmou que o pedido foi carregado no caminhão.",
+                    "9": "adicionar motivo"
+                }
+            },
+            "4": {
+                "descricao": "Entregue",
+                "subetapas": {
+                    "1": "Aguardando entrega.",
+                    "3": "Produtos entregues.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "já enviado e aguardando confirmação de entreaga",
+                    "3": "API de entrega ou distribuidor confirmou entrega do produto.",
+                    "9": "adicionar motivo"
+                }
+            }
+        }
+    },
+    "3": {
+        "descricao": "pix",
+        "etapas": {
+            "0": {
+                "descricao": "Registro",
+                "subetapas": {
+                    "1": "Realizando registro.",
+                    "2": "Registro realizado.",
+                    "3": "Enviado ao distribuidor.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "ainda está na fila de threads da registro.",
+                    "2": "enviado ao distribuidor e ao MaxiPago, e aguandando resposta até ambos darem OK ou NEGATIVA",
+                    "3": "resposta POSITIVA da autorização da MaxiPago e do distribuidor",
+                    "9": "adicionar motivo"
+                }
+            },
+            "1": {
+                "descricao": "Processamento",
+                "subetapas": {
+                    "1": "Aguardando pagamento.",
+                    "2": "Processando pagamento.",
+                    "3": "Pagamento confirmado.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "ainda está na fila de threads da processamento do financeiro. Somente capturar apos receber confirmação do distribuidor para tal",
+                    "2": "aguardando resposta da MaxiPago",
+                    "3": "ainda está na fila de threads da registro.",
+                    "9": "adicionar motivo"
+                }
+            },
+            "2": {
+                "descricao": "Separação",
+                "subetapas": {
+                    "1": "Aguardando separação.",
+                    "2": "Separando pedido.",
+                    "3": "Pedido separado.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "logística ainda não confirmou a separação do pedido, confirmação feita pelo distribuidor",
+                    "2": "nesse momento o distribuidor confirma que iniciou a separação",
+                    "3": "distribuidor confirmou a separação do pedido. OBS: NESSE MOMENTO CONSUMIR API DA MAXIPAGO COM O VALOR TOTAL DE PRODUTOS SEPARADOS CONFIRMADOS PELO DISTRIBUIDOR.",
+                    "9": "adicionar motivo"
+                }
+            },
+            "3": {
+                "descricao": "Faturamento",
+                "subetapas": {
+                    "1": "Aguardando faturamento.",
+                    "2": "Pedido faturado.",
+                    "3": "Em rota.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "pedido está no setor de faturamento do distribuidor aguardando liberação da nota",
+                    "2": "distribuidor confirmou faturamento e liberou a nota fiscal",
+                    "3": "distribuidor confirmou que o pedido foi carregado no caminhão.",
+                    "9": "adicionar motivo"
+                }
+            },
+            "4": {
+                "descricao": "Entregue",
+                "subetapas": {
+                    "1": "Aguardando entrega.",
+                    "3": "Produtos entregues.",
+                    "9": "Pedido cancelado"
+                },
+                "observacoes": {
+                    "1": "já enviado e aguardando confirmação de entreaga",
+                    "3": "API de entrega ou distribuidor confirmou entrega do produto.",
+                    "9": "adicionar motivo"
+                }
+            }
+        }
+    }
+}

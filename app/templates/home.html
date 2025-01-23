@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="{{	url_for('static', filename='css/home.css') }}">
+        
+        <title>API do Projeto B2B</title>
+        
+        <script> 
+            
+            let docJson = {{ doc_json|safe }}; 
+            let urlRoute = "{{ url|string() }}";
+        
+        </script>
+    </head>
+
+    <body>
+
+        <header>
+            <div class = "header-image">
+                <a href = "#">
+                    <img src="{{ url_for('static', filename='images/logo-jsleiman-ok.png') }}" 
+                        alt="Italian Trulli">
+                    </img>
+                </a>
+            </div>
+
+            <p class = "header-info">
+                Documentação da API do Projeto B2B
+            </p>
+        </header>
+        
+    </body>
+
+    <script src="{{	url_for('static', filename='js/jquery.js') }}"></script>
+    <script src="{{	url_for('static', filename='js/home.js') }}"></script>
+
+</html>
